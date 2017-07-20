@@ -3,12 +3,14 @@
 import point2line.*;
 
 class DBox {
-  int n = 4;
+  boolean isInside;
+ 
+  int n = 4;                        // number of handles
   Handle[] handles = new Handle[n];
   Vect2[] vertices = new Vect2[n];
   int hsize = 10;
 
-  DBox(int xpos, int ypos, int dsize) {
+  DBox(int xpos, int ypos, int dsize, DBox[] o) {
     handles[0] = new Handle(xpos - dsize/2, ypos - dsize/2, 0, 0, hsize, handles);
     handles[1] = new Handle(xpos + dsize/2, ypos - dsize/2, 0, 0, hsize, handles);
     handles[2] = new Handle(xpos + dsize/2, ypos + dsize/2, 0, 0, hsize, handles);
@@ -19,16 +21,18 @@ class DBox {
     }
   }
 
-  void display() {
+  void update() {
+    Vect2 mouse = new Vect2( mouseX, mouseY );
+    isInside = Space2.insidePolygon(mouse, vertices);
     for (int i = 0; i < handles.length; i++) {
       handles[i].update();
+    }
+  }
+
+  void display() {
+    for (int i = 0; i < handles.length; i++) {
       handles[i].display();
     }
-
-    Vect2 mouse = new Vect2( mouseX, mouseY );
-    boolean isInside = Space2.insidePolygon(mouse, vertices);
-
-    // display //
     if ( isInside ) fill( 255, 255, 255, 20 );
     else fill( 255, 255, 255, 120 );
     stroke(0);
