@@ -1,11 +1,13 @@
 # PEOPLE TRACKING SYSTEM WITH MULTI CAMS 
 
-Latest version: MultiCam3RoomMapping
+Latest version: PeopleTracking3Cam
 
-Set-up guide to come : 
+Config:
 Windows 10
 Kinect SDK 1.8
 SimpleOpenNI 1.96 with Processing 2.2.1 
+
+*set-up guide to come ... *
 
 To do : 
 - send number of people for each camera
