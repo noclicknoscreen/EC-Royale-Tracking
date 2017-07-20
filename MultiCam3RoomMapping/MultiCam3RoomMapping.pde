@@ -172,7 +172,6 @@ void renderUserPos(SimpleOpenNI cam, float camX, float camY, float camang) {
   arc(0, 0, Htemp, Htemp, -fieldOfView/2, fieldOfView/2);
 
   int[] userList1 = cam.getUsers();
-  println(cam + " : " + userList1.length);
   for (int i=0; i<userList1.length; i++) {   
     // draw the center of mass on 2D plane
     if (cam.getCoM(userList1[i], com) && com.z != 0) {
