@@ -12,6 +12,7 @@ void draw() {
   dboxes[1].update();
   dboxes[0].display();
   dboxes[1].display();
+  println(dboxes[0].detect(mouseX, mouseY));
 }
 
 void mouseReleased() {

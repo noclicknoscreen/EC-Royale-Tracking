@@ -3,8 +3,6 @@
 import point2line.*;
 
 class DBox {
-  boolean isInside;
- 
   int n = 4;                        // number of handles
   Handle[] handles = new Handle[n];
   Vect2[] vertices = new Vect2[n];
@@ -22,8 +20,6 @@ class DBox {
   }
 
   void update() {
-    Vect2 mouse = new Vect2( mouseX, mouseY );
-    isInside = Space2.insidePolygon(mouse, vertices);
     for (int i = 0; i < handles.length; i++) {
       handles[i].update();
     }
@@ -33,8 +29,6 @@ class DBox {
     for (int i = 0; i < handles.length; i++) {
       handles[i].display();
     }
-    if ( isInside ) fill( 255, 255, 255, 20 );
-    else fill( 255, 255, 255, 120 );
     stroke(0);
     beginShape();
     for (int i = 0; i < handles.length; i++) {
@@ -49,5 +43,17 @@ class DBox {
       handles[i].releaseEvent();
     }
   }
+
+  boolean detect(int x, int y) {
+    Vect2 coor = new Vect2(x, y);
+    return Space2.insidePolygon(coor, vertices);
+  }
+  
+  // TO-DO
+  int numberOfDetections() {return 0;}
+  int nearestDetection(){return 0;}
+  //coordinates of people in DBox
+  int[] getCoordinates(){return new int[0];}
+  
 }
 
