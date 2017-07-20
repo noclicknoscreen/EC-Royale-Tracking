@@ -25,7 +25,7 @@ class Camera {
     camang_init = json.getFloat("cam" + id + "ang");
     
     // kinect initialization
-    kin = new SimpleOpenNI(id, MultiCamClassRoomMapping.this);
+    kin = new SimpleOpenNI(id, PeopleTracking3Cam.this);
     this.id = id;
 
     // initialization callback
@@ -69,6 +69,9 @@ class Camera {
     noStroke();
     fill(#000000);
     rect(0-20/2, 0-40/2, 20, 40);
+    fill(#FFFFFF);
+    textSize(10);
+    text(id, 0, 0);
 
     // draw field of view
     fill(155, 155, 155, 155);
