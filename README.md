@@ -7,7 +7,7 @@ Windows 10
 Kinect SDK 1.8
 SimpleOpenNI 1.96 with Processing 2.2.1 
 
-*set-up guide to come ... *
+_set-up guide to come ..._ 
 
 To do : 
 - send number of people for each camera
