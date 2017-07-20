@@ -11,12 +11,13 @@ _set-up guide to come ..._
 
 
 ## TO DO:
-- send number of people for each camera
-- send nearest person for each camera
 - identify each person tracked by the system, with its position in cartesian and polar coordinates
-- improve UI
-- get it working for less cams than 3
 - user coordinates system with real dimensions
+- define detection areas
+- send number of people for each detection zone
+- send nearest person for each detection zone
+- improve UI to move cameras with drag&drop
+- get it working for less cams than 3
 - test on other systems (Mac, Linux)
 
 ## DONE:
