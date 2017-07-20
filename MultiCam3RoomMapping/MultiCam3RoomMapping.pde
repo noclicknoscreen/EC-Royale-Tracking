@@ -211,4 +211,3 @@ void onVisibleUser(SimpleOpenNI curcam1, int userId)
 {
   //println("onVisibleUser - userId: " + userId);
 }
-
