@@ -33,9 +33,6 @@ color[]       userClr = new color[] {
   color(0, 255, 255)
 };
 
-final static int IDLE = 0;
-final static int CALIB1 = 1;
-int state = IDLE;
 float fieldOfView = 0.84823;
 //room width and height in millimeters
 int roomWidth = 600;
