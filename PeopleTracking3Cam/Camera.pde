@@ -6,7 +6,7 @@ class Camera {
   PImage view;                             // view for rendering depth map on screen
   PVector com = new PVector();             // var to store center of mass, reused for each user
 
-    color[]       userClr = new color[] {    // custom user color list
+    color[] userClr = new color[] {    // custom user color list
     color(0, 0, 255), 
     color(0, 255, 0), 
     color(255, 255, 0), 
@@ -23,7 +23,7 @@ class Camera {
     camX_init =   json.getFloat("cam" + id + "X");  
     camY_init =   json.getFloat("cam" + id + "Y");
     camang_init = json.getFloat("cam" + id + "ang");
-    
+
     // kinect initialization
     kin = new SimpleOpenNI(id, PeopleTracking3Cam.this);
     this.id = id;
@@ -45,9 +45,9 @@ class Camera {
 
   //-----------------------------------------------------------------------
   //                              UPDATE
-//  void update() {
-//    kin.update();                    // SimpleOpenNI update
-//  }
+  //  void update() {
+  //    kin.update();                    // SimpleOpenNI update
+  //  }
 
   //-----------------------------------------------------------------------
   //                              DISPLAY VIEW 
@@ -127,23 +127,21 @@ class Camera {
   // -----------------------------------------------------------------
   //                     SIMPLE OPEN NI EVENTS
 
-  void onNewUser(SimpleOpenNI curkin1, int userId)
+  void onNewUser(SimpleOpenNI kin, int userId)
   {
     println("onNewUser - userId: " + userId);
-    println("\tstart tracking skeleton");
-
-    curkin1.startTrackingSkeleton(userId);
+    //kin.startTrackingSkeleton(userId);
   }
 
-  void onLostUser(SimpleOpenNI curkin1, int userId)
+  void onLostUser(SimpleOpenNI kin, int userId)
   {
     noFill(); // color display bug fix
     println("onLostUser - userId: " + userId);
   }
 
-  void onVisibleUser(SimpleOpenNI curkin1, int userId)
+  void onVisibleUser(SimpleOpenNI kin, int userId)
   {
-    //println("onVisibleUser - userId: " + userId);
+    println("onVisibleUser - userId: " + userId);
   }
 }
 
