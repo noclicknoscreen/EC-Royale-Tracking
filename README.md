@@ -1,1 +1,1 @@
-# EC-Royale-Tracking
+# people-tracking-multi-kinect
