@@ -35,16 +35,16 @@ void setup() {
   StrVector strList = new StrVector();
   SimpleOpenNI.deviceNames(strList);
   for (int i=0; i<strList.size (); i++) {
-    println(i + ":" + strList.get(i));
+    println(strList.size() + " kinect detected");
   }
 
   // check if there are enough cams  
-  //  if (strList.size() < 3)
-  //  {
-  //    println("only works with 2 cams");
-  //    exit();
-  //    return;
-  //  }  
+  if (strList.size() < 3)
+  {
+    println("only works with 2 cams");
+    exit();
+    return;
+  }  
 
   // Camera objects store metadata on cameras, like position, etc
   cam0 = new Camera(0);
@@ -66,9 +66,8 @@ void draw() {
   background(140, 140, 140);
 
   // update all cams
-  cam0.update();
-  cam1.update();
-  cam2.update();
+  SimpleOpenNI.updateAll();
+
 
   // display all cams depth view
   cam0.displayView(0, 0);
@@ -94,3 +93,4 @@ void draw() {
   text(int(frameRate) + " fps", 10, 20);
   popMatrix();
 }
+

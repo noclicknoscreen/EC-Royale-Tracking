@@ -18,10 +18,15 @@ class Camera {
 
   //-----------------------------------------------------------------------
   //                         CONSTRUCTOR
-  Camera(int id_) {
+  Camera(int id) {
+    // read data from previous session
+    camX_init =   json.getFloat("cam" + id + "X");  
+    camY_init =   json.getFloat("cam" + id + "Y");
+    camang_init = json.getFloat("cam" + id + "ang");
+    
     // kinect initialization
     kin = new SimpleOpenNI(id, MultiCamClassRoomMapping.this);
-    id = id_;
+    this.id = id;
 
     // initialization callback
     if (kin.isInit() == false) {
@@ -35,19 +40,14 @@ class Camera {
     // set the camera generators 
     kin.enableDepth();
     kin.enableUser();
-
-    // read data from previous session
-    camX_init = json.getFloat("cam" + id + "X");  
-    camY_init = json.getFloat("cam" + id + "Y");
-    camang_init = json.getFloat("cam" + id + "ang");
   }
 
 
   //-----------------------------------------------------------------------
   //                              UPDATE
-  void update() {
-    kin.update();                    // SimpleOpenNI update
-  }
+//  void update() {
+//    kin.update();                    // SimpleOpenNI update
+//  }
 
   //-----------------------------------------------------------------------
   //                              DISPLAY VIEW 
