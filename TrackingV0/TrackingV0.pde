@@ -48,7 +48,7 @@ JSONObject json;             // data stored from previous session
 
 void setup() {
   size(640 + 50, 480*2);
-  frameRate(25);
+  frameRate(30);
 
   //-------------------------------------------------------------
   //                   SETUP DATABASE
@@ -130,7 +130,8 @@ void draw() {
 //-------------------------------------------------------------
 //                  RECEIVING CLIENT : listen to osc 
 void oscEvent(OscMessage msg) {
-  print("### RECEIVED");
+  print("### OSC message at ");
+  print(millis() + " ms");
   print(" addrpattern: "+msg.addrPattern());
   println(" typetag: "+msg.typetag());
   println("### " + msg.get(0).intValue()+", "+ msg.get(1).intValue());
