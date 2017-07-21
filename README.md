@@ -1,6 +1,6 @@
 # PEOPLE TRACKING SYSTEM WITH MULTI CAMS 
 
-Latest version: PeopleTracking3Cam
+Latest version: TrackingV0
 
 Config:
 Windows 10
@@ -17,8 +17,9 @@ _set-up guide to come ..._
 - send number of people for each detection zone
 - send nearest person for each detection zone
 - improve UI to move cameras with drag&drop
-- get it working for less cams than 3
 - test on other systems (Mac, Linux)
 
 ## DONE:
 - factorize the code for each cam with classes
+- send number of people for each camera field
+- get it working for less cams than 3
