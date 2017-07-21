@@ -48,7 +48,7 @@ JSONObject json;             // data stored from previous session
 
 void setup() {
   size(640 + 50, 480*2);
-  frameRate(10);
+  frameRate(25);
 
   //-------------------------------------------------------------
   //                   SETUP DATABASE
@@ -75,8 +75,8 @@ void setup() {
   // RECEIVING : Start oscP5, listening for incoming messages at port 12000
   oscP5 = new OscP5(this, 12000);
   // SENDING : NetAdress : ip adress and port number for sending data
-  // 127.0.0.1    to loop home
-  // 192.168.X.X  for external destination  (port should be different from reception)
+  // 127.0.0.1    to loop home              (send on home reception port)
+  // 192.168.X.X  for external destination  (port should be different from home reception)
   destination = new NetAddress("127.0.0.1", 12000);
 
 
@@ -94,7 +94,7 @@ void draw() {
   //                        UPDATE CAMERAS
   // update all cams
   SimpleOpenNI.updateAll();
-  
+
   //-------------------------------------------------------------
   //                      DISPLAY DASHBOARD
 
@@ -115,15 +115,24 @@ void draw() {
   cam1N = cam1.renderUserPos();
   //  cam2.renderUserPos();
   popMatrix();
-  
+
   // display Framerate (style in SetupControl)
   displayFramerate();
-  
+
   //-------------------------------------------------------------
   //                         OUTPUT OSC
   OscMessage msg = new OscMessage("/camNumberOfUsers");
   msg.add(cam0N);
   msg.add(cam1N);
-  oscP5.send(msg, destination); 
+  oscP5.send(msg, destination);
+}
+
+//-------------------------------------------------------------
+//                  RECEIVING CLIENT : listen to osc 
+void oscEvent(OscMessage msg) {
+  print("### RECEIVED");
+  print(" addrpattern: "+msg.addrPattern());
+  println(" typetag: "+msg.typetag());
+  println("### " + msg.get(0).intValue()+", "+ msg.get(1).intValue());
 }
 
