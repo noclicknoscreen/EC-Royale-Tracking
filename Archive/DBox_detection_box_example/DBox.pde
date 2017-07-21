@@ -26,9 +26,7 @@ class DBox {
   }
 
   void display() {
-    for (int i = 0; i < handles.length; i++) {
-      handles[i].display();
-    }
+ 
     stroke(0);
     beginShape();
     for (int i = 0; i < handles.length; i++) {
@@ -36,6 +34,9 @@ class DBox {
       vertices [i] = new Vect2(handles[i].getX(), handles[i].getY());
     }
     endShape(CLOSE);
+      for (int i = 0; i < handles.length; i++) {
+      handles[i].display(i);
+    }
   }
 
   void releaseEvent() {

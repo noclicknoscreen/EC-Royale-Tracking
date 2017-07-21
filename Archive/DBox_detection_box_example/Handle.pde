@@ -69,11 +69,15 @@ class Handle {
     locked = false;
   }
 
-  void display() {
+  void display(int i) {
     fill(255);
     stroke(0);
     // display handle
     rect(boxx, boxy, size, size);
+    fill(#000000);
+    textSize(8);
+    text(i, boxx, boxy);
+    fill(#FFFFFF);
     // display a cross when pressed
     if (over || press) {
       line(boxx, boxy, boxx+size, boxy+size);
