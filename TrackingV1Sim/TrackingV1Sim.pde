@@ -82,8 +82,6 @@ void setup() {
   //                     SETUP DETECTION BOX
   dbox[0] = new DBox(0, 20);
   dbox[1] = new DBox(1, 20);
-  dbox[2] = new DBox(2, 20);
-  dbox[3] = new DBox(3, 20);
 
   //-------------------------------------------------------------
   //                     SET UP DUDLEYS
