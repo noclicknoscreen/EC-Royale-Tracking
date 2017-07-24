@@ -3,12 +3,14 @@
 import point2line.*;
 
 class DBox {
+  int id;
   int n = 4;                        // number of handles
   Handle[] handles = new Handle[n];
   Vect2[] vertices = new Vect2[n];
-  int hsize = 10;
+  float hsize = 10;
 
-  DBox(int id, int dsize) {
+  DBox(int id, float dsize) {
+    this.id = id;
     //read data from previous session
     handles[0] = new Handle(getDBoxDataCoor(id, 0).x - dsize/2, getDBoxDataCoor(id, 0).y - dsize/2, 0, 0, hsize, handles);
     handles[1] = new Handle(getDBoxDataCoor(id, 1).x + dsize/2, getDBoxDataCoor(id, 1).y - dsize/2, 0, 0, hsize, handles);
@@ -43,8 +45,9 @@ class DBox {
   }
 
   void display() {
-
+    fill(255, 255, 255, 50);
     stroke(0);
+    strokeWeight(1);
     beginShape();
     for (int i = 0; i < handles.length; i++) {
       vertex(handles[i].getX(), handles[i].getY());
@@ -54,6 +57,10 @@ class DBox {
     for (int i = 0; i < handles.length; i++) {
       handles[i].display(i);
     }
+    fill(0, 0, 0, 50);
+    textSize(46);
+    text(id, handles[0].getX() + 10, handles[0].getY() + 40);
+    
   }
 
   void releaseEvent() {
@@ -62,25 +69,21 @@ class DBox {
     }
   }
 
-  boolean detect(int x, int y) {
+  boolean detect(float x, float y) {
     Vect2 coor = new Vect2(x, y);
     return Space2.insidePolygon(coor, vertices);
-  }
-
-  Handle[] getHandles() {
-    return handles;
   }
 
   // TO-DO
   int numberOfDetections() {
     return 0;
   }
-  int nearestDetection() {
+  float nearestDetection() {
     return 0;
   }
   //coordinates of people in DBox
-  int[] getCoordinates() {
-    return new int[0];
+  float[] getCoordinates() {
+    return new float[0];
   }
 }
 
@@ -96,7 +99,7 @@ class Handle {
   boolean otherslocked = false; // true when at least one of the handles is locked
   Handle[] others;              // list of handles
 
-    Handle(float ix, float iy, int il, int ih, int is, Handle[] o) {
+    Handle(float ix, float iy, float il, float ih, float is, Handle[] o) {
     x_init = ix;
     y_init = iy;
     xs = il;
@@ -108,9 +111,8 @@ class Handle {
   }
 
   void update() {
-    boxx = x_init+xs;
-    boxy = y_init+ys;
-
+    boxx = lock(x_init+xs, 20, width -20);
+    boxy = lock(y_init+ys, 20, height-20);
 
     // othersLocked is true when at least one of the handles is locked
     for (int i=0; i<others.length; i++) {
@@ -124,24 +126,42 @@ class Handle {
 
     // if no handles is locked, see if a handle is clicked
     if (otherslocked == false) {
-      //      overEvent();
-      //      pressEvent();
+      overEvent();
+      pressEvent();
     }
     if (press) {
       xs = mouseX-x_init-size/2;
       ys = mouseY-y_init-size/2;
     }
   }
+  
+  
+  void display(int i) {
+    fill(255);
+    stroke(0);
+    strokeWeight(1);
+    // display handle
+    rect(boxx, boxy, size, size);
+    fill(#000000);
+    textSize(8);
+    text(i, boxx, boxy);
+    fill(#FFFFFF);
+    // display a cross when pressed
+    if (over || press) {
+      line(boxx, boxy, boxx+size, boxy+size);
+      line(boxx, boxy+size, boxx+size, boxy);
+    }
+  }
 
 
-  //
-  //  void overEvent() {
-  //    if (overRect(boxx, boxy, size, size)) {
-  //      over = true;
-  //    } else {
-  //      over = false;
-  //    }
-  //  }
+
+  void overEvent() {
+    if (overRect(boxx, boxy, size, size)) {
+      over = true;
+    } else {
+      over = false;
+    }
+  }
 
   void pressEvent() {
     if (over && mousePressed || locked) {
@@ -156,22 +176,7 @@ class Handle {
     locked = false;
   }
 
-  void display(int i) {
-    fill(255);
-    stroke(0);
-    // display handle
-    rect(boxx, boxy, size, size);
-    fill(#000000);
-    textSize(8);
-    text(i, boxx, boxy);
-    fill(#FFFFFF);
-    // display a cross when pressed
-    if (over || press) {
-      line(boxx, boxy, boxx+size, boxy+size);
-      line(boxx, boxy+size, boxx+size, boxy);
-    }
-  }
-  
+
   float getX() {
     return boxx+size/2;
   }
@@ -181,9 +186,9 @@ class Handle {
   }
 
 
-  boolean overRect(int x, int y, int width, int height) {
-    if (mouseX >= x && mouseX <= x+width && 
-      mouseY >= y && mouseY <= y+height) {
+  boolean overRect(float x, float y, float w, float h) {
+    if (mouseX >= x && mouseX <= x+w && 
+      mouseY >= y && mouseY <= y+h) {
       return true;
     } else {
       return false;
@@ -192,8 +197,9 @@ class Handle {
 
 
   // limits
-  int lock(int val, int minv, int maxv) { 
+  float lock(float val, float minv, float maxv) { 
     return  min(max(val, minv), maxv);
   }
 }
+
 

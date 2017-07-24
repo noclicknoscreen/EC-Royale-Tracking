@@ -33,7 +33,7 @@ import netP5.*;
 import controlP5.*;
 
 Camera cam0, cam1;     // cameras 
-//Camera cam2;
+Camera cam2;
 int cam0N, cam1N;
 DBox dbox0, dbox1;
 OscP5 oscP5;                 // open sound control : send data
@@ -48,8 +48,16 @@ final static int viewWidth = 640/2;       // view width scaling for rendering on
 final static int viewHeight = 480/2;      
 JSONObject data;             // data stored from previous session
 
+
+// Simulation variables
+float  t = 0;    // time init
+float  v = 0.005; // rotation speed
+float r;
+float  r_ = 100; // rotation radius
+float  s = 20;   // size of the ellipse
+
 void setup() {
-  size(640 + 50, 480*2);
+  size(1080, 720);
   frameRate(30);
 
   //-------------------------------------------------------------
@@ -57,26 +65,26 @@ void setup() {
   // load data from previous session
   data = loadJSONObject("data/roomProfile.json");
 
-  //-------------------------------------------------------------
-  //                   SET UP SIMPLE OPEN NI
-  // start OpenNI, load the library
-  SimpleOpenNI.start();
-
-  // print all the cams 
-  StrVector strList = new StrVector();
-  SimpleOpenNI.deviceNames(strList);
-  println(strList.size() + " kinect detected");
+  //  //-------------------------------------------------------------
+  //  //                   SET UP SIMPLE OPEN NI
+  //  // start OpenNI, load the library
+  //  SimpleOpenNI.start();
+  //
+  //  // print all the cams 
+  //  StrVector strList = new StrVector();
+  //  SimpleOpenNI.deviceNames(strList);
+  //  println(strList.size() + " kinect detected");
 
   // Camera objects store metadata on cameras, like position, etc
   cam0 = new Camera(0);
   cam1 = new Camera(1);
-  //  cam2 = new Camera(2);
-  
+  cam2 = new Camera(2);
+
   //-------------------------------------------------------------
   //                     SETUP DETECTION BOX
   dbox0 = new DBox(0, 20);
   dbox1 = new DBox(1, 20);
-  
+
 
   //-------------------------------------------------------------
   //                      SETUP OSC COMMUNICATION
@@ -98,29 +106,30 @@ void setup() {
 void draw() { 
   background(140, 140, 140);
 
-  //-------------------------------------------------------------
-  //                        UPDATE CAMERAS
-  // update all cams
-  SimpleOpenNI.updateAll();
+  //  //-------------------------------------------------------------
+  //  //                        UPDATE CAMERAS
+  //  // update all cams
+  //  SimpleOpenNI.updateAll();
 
-  //-------------------------------------------------------------
-  //                      DISPLAY DASHBOARD
-
-  // display all cams depth view
-  cam0.displayView(0, 0);
-  cam1.displayView(viewWidth, 0);
-  //  cam2.displayView(0, viewHeight);
+  //  //-------------------------------------------------------------
+  //  //                      DISPLAY DASHBOARD
+  //
+  //  // display all cams depth view
+  //  cam0.displayView(0, 0);
+  //  cam1.displayView(viewWidth, 0);
+  //  //  cam2.displayView(0, viewHeight);
 
   // shift to virtual room area
   pushMatrix();
-  translate(0, height- roomHeight);
+  translate(0, 200);
   fill(#DDDDDD);
   noStroke();
-  rect(20, 0, roomWidth, roomHeight-20);
+  rect(20, 0, roomWidth, roomHeight);
   // get position on plan and render it
   // returns number of users
-  cam0N = cam0.renderUserPos();
-  cam1N = cam1.renderUserPos();
+  cam0.renderUserPos();
+  cam1.renderUserPos();
+  cam2.renderUserPos();
   //  cam2.renderUserPos();
   popMatrix();
 
@@ -133,6 +142,14 @@ void draw() {
   msg.add(cam0N);
   msg.add(cam1N);
   oscP5.send(msg, destination);
+
+  //-------------------------------------------------------------
+  //                       DBOX RENDERING
+  dbox0.update();
+  dbox1.update();
+  dbox0.display();
+  dbox1.display();
+  println(dbox1.detect(mouseX, mouseY));
 }
 
 //-------------------------------------------------------------
@@ -143,5 +160,11 @@ void oscEvent(OscMessage msg) {
   print(" addrpattern: "+msg.addrPattern());
   println(" typetag: "+msg.typetag());
   println("### " + msg.get(0).intValue()+", "+ msg.get(1).intValue());
+}
+
+
+void mouseReleased() {
+  dbox0.releaseEvent();
+  dbox1.releaseEvent();
 }
 

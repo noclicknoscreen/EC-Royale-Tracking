@@ -20,20 +20,20 @@ void setupControl() {
   pos0x = cp5.addNumberbox("pos0x")
     .setSize(70, 20)
       .setRange(0, roomWidth)
-        .setPosition(30 + 70 + 30, 480/2 - 40)
+        .setPosition(30 + 70 + 30, 40)
           .setDirection(Controller.HORIZONTAL)
             .setValue(int(cam0.getX_init()))
               ;
   pos0y = cp5.addNumberbox("pos0y")
     .setSize(70, 20)
       .setRange(0, roomHeight)
-        .setPosition(30+ 70 +30 +70 +30, 480/2 - 40)
+        .setPosition(30+ 70 +30 +70 +30, 40)
           .setValue(int(cam0.getY_init()))
             ;
   ang0 = cp5.addNumberbox("ang0")
     .setSize(70, 20)
       .setRange(0, 360)
-        .setPosition(30, 480/2 - 40)
+        .setPosition(30, 40)
           .setDirection(Controller.HORIZONTAL)
             .setValue(int(degrees(cam0.getAng_init())))
               ;
@@ -46,20 +46,20 @@ void setupControl() {
   pos1x = cp5.addNumberbox("pos1x")
     .setSize(70, 20)
       .setRange(0, roomWidth)
-        .setPosition(640/2+30 + 70 + 30, 480/2 - 40)
+        .setPosition(640/2+30 + 70 + 30, 40)
           .setDirection(Controller.HORIZONTAL)
             .setValue(int(cam1.getX_init()))
               ;
   pos1y = cp5.addNumberbox("pos1y")
     .setSize(70, 20)
       .setRange(0, roomHeight)
-        .setPosition(640/2+30+ 70 +30 +70 +30, 480/2 - 40)
+        .setPosition(640/2+30+ 70 +30 +70 +30, 40)
           .setValue(int(cam1.getY_init()))
             ;
   ang1 = cp5.addNumberbox("ang1")
     .setSize(70, 20)
       .setRange(0, 360)
-        .setPosition(640/2 + 30, 480/2 - 40)
+        .setPosition(640/2 + 30, 40)
           .setDirection(Controller.HORIZONTAL)
             .setValue(int(degrees(cam1.getAng_init())))
               ;
@@ -67,31 +67,30 @@ void setupControl() {
   makeEditable(pos1y);
   makeEditable(ang1);
   ang1.getValueLabel().setText(str(int(degrees(cam1.getAng()))));
-  //
-  //  pos2x = cp5.addNumberbox("pos2x")
-  //    .setSize(70, 20)
-  //      .setRange(0, roomWidth)
-  //        .setPosition(30 + 70 + 30, 2*480/2 - 40)
-  //          .setDirection(Controller.HORIZONTAL)
-  //            .setValue(int(cam2.getX_init()))
-  //              ;
-  //  pos2y = cp5.addNumberbox("pos2y")
-  //    .setSize(70, 20)
-  //      .setRange(0, roomHeight)
-  //        .setPosition(30+ 70 +30 +70 +30, 2*480/2 - 40)
-  //          .setValue(int(cam2.getY_init()))
-  //            ;
-  //  ang2 = cp5.addNumberbox("ang2")
-  //    .setSize(70, 20)
-  //      .setRange(0, 360)
-  //        .setPosition(30, 2*480/2 - 40)
-  //          .setDirection(Controller.HORIZONTAL)
-  //            .setValue(int(degrees(cam2.getAng_init())))
-  //              ;
-  //  makeEditable(pos2x);
-  //  makeEditable(pos2y);
-  //  makeEditable(ang2);
-  //  ang2.getValueLabel().setText(str(int(degrees(cam2.getAng()))));
+  pos2x = cp5.addNumberbox("pos2x")
+    .setSize(70, 20)
+      .setRange(0, roomWidth)
+        .setPosition(30 + 70 + 30, 2*40)
+          .setDirection(Controller.HORIZONTAL)
+            .setValue(int(cam2.getX_init()))
+              ;
+  pos2y = cp5.addNumberbox("pos2y")
+    .setSize(70, 20)
+      .setRange(0, roomHeight)
+        .setPosition(30+ 70 +30 +70 +30, 2* 40)
+          .setValue(int(cam2.getY_init()))
+            ;
+  ang2 = cp5.addNumberbox("ang2")
+    .setSize(70, 20)
+      .setRange(0, 360)
+        .setPosition(30, 2* 40)
+          .setDirection(Controller.HORIZONTAL)
+            .setValue(int(degrees(cam2.getAng_init())))
+              ;
+  makeEditable(pos2x);
+  makeEditable(pos2y);
+  makeEditable(ang2);
+  ang2.getValueLabel().setText(str(int(degrees(cam2.getAng()))));
 
 
   cp5.addButton("save")
@@ -119,17 +118,17 @@ void pos1y(int v) {
 void ang1(int v) {
   cam1.setAng(radians(v));
 }
-//void pos2x(int v) {
-//  cam2.setX(v);
-//}
-//void pos2y(int v) {
-//  cam2.setY(v);
-//}
-//void ang2(int v) {
-//  cam2.setAng(radians(v));
-//}
-//
-//
+void pos2x(int v) {
+  cam2.setX(v);
+}
+void pos2y(int v) {
+  cam2.setY(v);
+}
+void ang2(int v) {
+  cam2.setAng(radians(v));
+}
+
+
 
 void save(int v) {
   data.setFloat("cam0X", cam0.getX());
@@ -138,15 +137,9 @@ void save(int v) {
   data.setFloat("cam1X", cam1.getX());
   data.setFloat("cam1Y", cam1.getY());
   data.setFloat("cam1ang", cam1.getAng());
-  //  data.setFloat("cam2X", cam2.getX());
-  //  data.setFloat("cam2Y", cam2.getY());
-  //  data.setFloat("cam2ang", cam2.getAng());
-  for (int i = 0; i< 4; i++) {
-//    data.dbox[0].handlesCoor[i].setFloat("x", dbox0.getHandles()[i].getX());
-//    data.dbox[0].handlesCoor[i].setFloat("y", dbox0.getHandles()[i].getY());
-//    data.dbox[1].handlesCoor[i].setFloat("x", dbox1.getHandles()[i].getX());
-//    data.dbox[1].handlesCoor[i].setFloat("y", dbox1.getHandles()[i].getY());
-  }
+  data.setFloat("cam2X", cam2.getX());
+  data.setFloat("cam2Y", cam2.getY());
+  data.setFloat("cam2ang", cam2.getAng());
   saveJSONObject(data, "data/roomProfile.json");
 }
 

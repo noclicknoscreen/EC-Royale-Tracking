@@ -1,16 +1,16 @@
 
 class Handle {
-  int x_init, y_init;                     // initial position
-  int boxx, boxy;               // box real time position
-  int xs, ys;                   // movement
-  int size;                     // box size
+  float x_init, y_init;                     // initial position
+  float boxx, boxy;               // box real time position
+  float xs, ys;                   // movement
+  float size;                     // box size
   boolean over;                 // handle mouse state
   boolean press;                // handle mouse state
   boolean locked = false;       // handle mouse state
   boolean otherslocked = false; // true when at least one of the handles is locked
   Handle[] others;              // list of handles
 
-    Handle(int ix, int iy, int il, int ih, int is, Handle[] o) {
+    Handle(float ix, float iy, float il, float ih, float is, Handle[] o) {
     x_init = ix;
     y_init = iy;
     xs = il;
@@ -85,18 +85,18 @@ class Handle {
     }
   }
 
-  int getX() {
+  float getX() {
     return boxx+size/2;
   }
 
-  int getY() {
+  float getY() {
     return boxy+size/2;
   }
 
 
-  boolean overRect(int x, int y, int width, int height) {
-    if (mouseX >= x && mouseX <= x+width && 
-      mouseY >= y && mouseY <= y+height) {
+  boolean overRect(float x, float y, float w, float h) {
+    if (mouseX >= x && mouseX <= x+w && 
+      mouseY >= y && mouseY <= y+h) {
       return true;
     } else {
       return false;
@@ -105,7 +105,7 @@ class Handle {
 
 
   // limits
-  int lock(int val, int minv, int maxv) { 
+  float lock(float val, float minv, float maxv) { 
     return  min(max(val, minv), maxv);
   }
 }

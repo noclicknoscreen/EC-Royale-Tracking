@@ -6,9 +6,9 @@ class DBox {
   int n = 4;                        // number of handles
   Handle[] handles = new Handle[n];
   Vect2[] vertices = new Vect2[n];
-  int hsize = 10;
+  float hsize = 10;
 
-  DBox(int xpos, int ypos, int dsize, DBox[] o) {
+  DBox(float xpos, float ypos, float dsize, DBox[] o) {
     handles[0] = new Handle(xpos - dsize/2, ypos - dsize/2, 0, 0, hsize, handles);
     handles[1] = new Handle(xpos + dsize/2, ypos - dsize/2, 0, 0, hsize, handles);
     handles[2] = new Handle(xpos + dsize/2, ypos + dsize/2, 0, 0, hsize, handles);
@@ -26,7 +26,7 @@ class DBox {
   }
 
   void display() {
- 
+
     stroke(0);
     beginShape();
     for (int i = 0; i < handles.length; i++) {
@@ -34,7 +34,7 @@ class DBox {
       vertices [i] = new Vect2(handles[i].getX(), handles[i].getY());
     }
     endShape(CLOSE);
-      for (int i = 0; i < handles.length; i++) {
+    for (int i = 0; i < handles.length; i++) {
       handles[i].display(i);
     }
   }
@@ -45,16 +45,21 @@ class DBox {
     }
   }
 
-  boolean detect(int x, int y) {
+  boolean detect(float x, float y) {
     Vect2 coor = new Vect2(x, y);
     return Space2.insidePolygon(coor, vertices);
   }
-  
+
   // TO-DO
-  int numberOfDetections() {return 0;}
-  int nearestDetection(){return 0;}
+  int numberOfDetections() {
+    return 0;
+  }
+  float nearestDetection() {
+    return 0;
+  }
   //coordinates of people in DBox
-  int[] getCoordinates(){return new int[0];}
-  
+  float[] getCoordinates() {
+    return new float[0];
+  }
 }
 

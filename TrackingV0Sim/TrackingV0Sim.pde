@@ -1,4 +1,5 @@
 /* --------------------------------------------------------------------------
+ * Simulation for 
  * People Tracking with Multiple Kinect Cameras, sending OSC Data 
  * --------------------------------------------------------------------------
  * Get started: 
@@ -27,59 +28,57 @@
  * ----------------------------------------------------------------------------
  */
 
-import SimpleOpenNI.*;
 import oscP5.*;
 import netP5.*;
 import controlP5.*;
 
 Camera cam0, cam1;     // cameras 
-//Camera cam2;
+Camera cam2;
 int cam0N, cam1N;
-DBox dbox0, dbox1;
 OscP5 oscP5;                 // open sound control : send data
 NetAddress destination; // ip adresse for osc communication
 ControlP5 cp5;               // UI Control
-
 
 final static float fieldOfView = 0.84823; // kinect v1 field of view angle in radians
 final static int roomWidth = 600;         // room (real) width and height in millimeters 
 final static int roomHeight = 480;        // TODO : custom coor sys to have real dimensions
 final static int viewWidth = 640/2;       // view width scaling for rendering on screen
 final static int viewHeight = 480/2;      
-JSONObject data;             // data stored from previous session
+JSONObject json;             // data stored from previous session
+
+// Simulation variables
+float  t = 0;    // time init
+float  v = 0.005; // rotation speed
+float r;
+float  r_ = 100; // rotation radius
+float  s = 20;   // size of the ellipse
 
 void setup() {
-  size(640 + 50, 480*2);
+  size(1080, 720);
   frameRate(30);
 
   //-------------------------------------------------------------
   //                   SETUP DATABASE
   // load data from previous session
-  data = loadJSONObject("data/roomProfile.json");
+  json = loadJSONObject("data/roomProfile.json");
 
   //-------------------------------------------------------------
   //                   SET UP SIMPLE OPEN NI
   // start OpenNI, load the library
-  SimpleOpenNI.start();
+  // SimpleOpenNI.start();
 
   // print all the cams 
-  StrVector strList = new StrVector();
-  SimpleOpenNI.deviceNames(strList);
-  println(strList.size() + " kinect detected");
+  //StrVector strList = new StrVector();
+  //  SimpleOpenNI.deviceNames(strList);
+  //  println(strList.size() + " kinect detected");
 
   // Camera objects store metadata on cameras, like position, etc
   cam0 = new Camera(0);
   cam1 = new Camera(1);
-  //  cam2 = new Camera(2);
-  
-  //-------------------------------------------------------------
-  //                     SETUP DETECTION BOX
-  dbox0 = new DBox(0, 20);
-  dbox1 = new DBox(1, 20);
-  
+  cam2 = new Camera(2);
 
   //-------------------------------------------------------------
-  //                      SETUP OSC COMMUNICATION
+  //                       SET UP OSC COMMUNICATION
   // RECEIVING : Start oscP5, listening for incoming messages at port 12000
   oscP5 = new OscP5(this, 12000);
   // SENDING : NetAdress : ip adress and port number for sending data
@@ -89,7 +88,7 @@ void setup() {
 
 
   //-------------------------------------------------------------
-  //                      SET UP USER INTERFACE
+  //                    SET UP USER INTERFACE
   // controlP5 lib for controllers : buttons, sliders, etc
   cp5 = new ControlP5(this);
   setupControl();
@@ -101,27 +100,27 @@ void draw() {
   //-------------------------------------------------------------
   //                        UPDATE CAMERAS
   // update all cams
-  SimpleOpenNI.updateAll();
+  //  SimpleOpenNI.updateAll();
 
   //-------------------------------------------------------------
   //                      DISPLAY DASHBOARD
 
   // display all cams depth view
-  cam0.displayView(0, 0);
-  cam1.displayView(viewWidth, 0);
+  //  cam0.displayView(0, 0);
+  //  cam1.displayView(viewWidth, 0);
   //  cam2.displayView(0, viewHeight);
 
   // shift to virtual room area
   pushMatrix();
-  translate(0, height- roomHeight);
+  translate(0, 200);
   fill(#DDDDDD);
   noStroke();
-  rect(20, 0, roomWidth, roomHeight-20);
+  rect(20, 0, roomWidth, roomHeight);
   // get position on plan and render it
   // returns number of users
-  cam0N = cam0.renderUserPos();
-  cam1N = cam1.renderUserPos();
-  //  cam2.renderUserPos();
+  cam0.renderUserPos();
+  cam1.renderUserPos();
+  cam2.renderUserPos();
   popMatrix();
 
   // display Framerate (style in SetupControl)
