@@ -140,7 +140,26 @@ void save(int v) {
   data.setFloat("cam2X", cam2.getX());
   data.setFloat("cam2Y", cam2.getY());
   data.setFloat("cam2ang", cam2.getAng());
+  for (int id = 0; id < 2; id ++) {
+    for (int ihandle = 0; ihandle < 4; ihandle++) {
+      saveDBoxHandle(id, ihandle);
+    }
+  }
+
   saveJSONObject(data, "data/roomProfile.json");
+}
+
+void saveDBoxHandle(int id, int ihandle) {
+  data.getJSONArray("dbox")
+    .getJSONObject(id)
+      .getJSONArray("handlesCoor")
+        .getJSONObject(ihandle)
+          .setFloat("x", dbox[id].getHandles()[ihandle].getX());
+  data.getJSONArray("dbox")
+    .getJSONObject(id)
+      .getJSONArray("handlesCoor")
+        .getJSONObject(ihandle)
+          .setFloat("y", dbox[id].getHandles()[ihandle].getY());
 }
 
 // function that will be called when controller 'numbers' changes

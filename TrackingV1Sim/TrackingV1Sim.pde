@@ -35,7 +35,7 @@ import controlP5.*;
 Camera cam0, cam1;     // cameras 
 Camera cam2;
 int cam0N, cam1N;
-DBox dbox0, dbox1;
+DBox[] dbox = new DBox[2];
 OscP5 oscP5;                 // open sound control : send data
 NetAddress destination; // ip adresse for osc communication
 ControlP5 cp5;               // UI Control
@@ -46,6 +46,7 @@ final static int roomWidth = 600;         // room (real) width and height in mil
 final static int roomHeight = 480;        // TODO : custom coor sys to have real dimensions
 final static int viewWidth = 640/2;       // view width scaling for rendering on screen
 final static int viewHeight = 480/2;      
+final static boolean SIMULATION = true; 
 JSONObject data;             // data stored from previous session
 
 
@@ -68,12 +69,14 @@ void setup() {
   //  //-------------------------------------------------------------
   //  //                   SET UP SIMPLE OPEN NI
   //  // start OpenNI, load the library
-  //  SimpleOpenNI.start();
-  //
-  //  // print all the cams 
-  //  StrVector strList = new StrVector();
-  //  SimpleOpenNI.deviceNames(strList);
-  //  println(strList.size() + " kinect detected");
+  if (!SIMULATION) {
+    SimpleOpenNI.start();
+
+    // print all the cams 
+    StrVector strList = new StrVector();
+    SimpleOpenNI.deviceNames(strList);
+    println(strList.size() + " kinect detected");
+  }
 
   // Camera objects store metadata on cameras, like position, etc
   cam0 = new Camera(0);
@@ -82,8 +85,8 @@ void setup() {
 
   //-------------------------------------------------------------
   //                     SETUP DETECTION BOX
-  dbox0 = new DBox(0, 20);
-  dbox1 = new DBox(1, 20);
+  dbox[0] = new DBox(0, 20);
+  dbox[1] = new DBox(1, 20);
 
 
   //-------------------------------------------------------------
@@ -105,7 +108,7 @@ void setup() {
 
 void draw() { 
   background(140, 140, 140);
-
+  
   //  //-------------------------------------------------------------
   //  //                        UPDATE CAMERAS
   //  // update all cams
@@ -145,11 +148,11 @@ void draw() {
 
   //-------------------------------------------------------------
   //                       DBOX RENDERING
-  dbox0.update();
-  dbox1.update();
-  dbox0.display();
-  dbox1.display();
-  println(dbox1.detect(mouseX, mouseY));
+  dbox[0].update();
+  dbox[1].update();
+  dbox[0].display();
+  dbox[1].display();
+  println(dbox[1].detect(mouseX, mouseY));
 }
 
 //-------------------------------------------------------------
@@ -164,7 +167,7 @@ void oscEvent(OscMessage msg) {
 
 
 void mouseReleased() {
-  dbox0.releaseEvent();
-  dbox1.releaseEvent();
+  dbox[0].releaseEvent();
+  dbox[1].releaseEvent();
 }
 
