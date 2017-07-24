@@ -5,12 +5,15 @@
  *  DBox or Detection Box is a custom class used to have a specific editable area
  *  where users are detected. It uses the point2line library for polygone detection,
  *  i.e. a tool to know if a point is inside a polygon
- *  
+ *
+ *  relies on Handle class (see below)
  *******************************************************************************************/
 import point2line.*;
 
 class DBox {
   int id;                             // dbox id
+  int opacity = 50;                   // display opacity
+  boolean presenceDetected = false;   // detection state
   float hsize = 10;                   // handle size
   Handle[] handles = new Handle[4];   // handles declaration
   Vect2[] vertices = new Vect2[4];    // vertices for polygon detection
@@ -42,9 +45,22 @@ class DBox {
 
   //---------------------------------------------------------------------------
   //                      OUTPUT FUNCTION
-  boolean detect(float x, float y) {
-    Vect2 coor = new Vect2(x, y);
-    return Space2.insidePolygon(coor, vertices);
+
+  boolean detect(Dudley[] dud) {
+    presenceDetected = false;
+    for (int k=0; k<dud.length; k++) {
+      Vect2 coor = new Vect2(dud[k].getX(), dud[k].getY());
+      if (Space2.insidePolygon(coor, vertices)) {
+        dud[k].setZone(id);
+        presenceDetected = true;
+      };
+    }
+    if (presenceDetected) {
+      opacity = 150;
+    } else {
+      opacity = 5;
+    }
+    return presenceDetected;
   }
 
   //----------------------------------------------------------------------------
@@ -58,9 +74,8 @@ class DBox {
   //---------------------------------------------------------------------------
   //                      DBOX DISPLAY
   void display() {
-
     // vertex for polygon shape
-    fill(255, 255, 255, 50);
+    fill(255, 255, 255, opacity);
     stroke(0);
     strokeWeight(1);
     beginShape();

@@ -9,30 +9,43 @@
  *******************************************************************************************/
 
 class Dudley {
-  float x, y;
-  float  t = 0;     // time init
+  int id;
+  float Ox, Oy, x, y;
   float  v;         // rotation speed
   float  r_;        // rotation radius before sin
   float  r;         // rotation radius after sin 
   float  s = 20;    // size of dudley
+  float  t = 0;     // time init
+  int zone = -1;    // zone where dudley is : -1 if not detected
 
-
-  Dudley(float x, float y, float r_, float v) {
-    this.x = x;
-    this.y = y;
+  Dudley(int id, float Ox, float Oy, float r_, float v) {
+    this.id = id;
+    this.Ox = Ox;
+    this.Oy = Oy;
     this.r_ = r_;
     this.v = v;
   }
 
   void display() {
     pushMatrix();
-    translate(x, y);
     t += v;
     r = r_ *( 1 + 0.4 * sin(t*8.15));
     stroke(255);
     strokeWeight(20);
-    point(r*cos(t), r*sin(t));
+    x = Ox + r*cos(t);
+    y = Oy + r*sin(t);
+    point(x, y);
     popMatrix();
+  }
+
+  float getX() {
+    return x;
+  }
+  float getY() {
+    return y;
+  }
+  void setZone(int i) {
+    zone = i;
   }
 }
 

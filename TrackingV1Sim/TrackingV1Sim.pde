@@ -82,11 +82,13 @@ void setup() {
   //                     SETUP DETECTION BOX
   dbox[0] = new DBox(0, 20);
   dbox[1] = new DBox(1, 20);
+  dbox[2] = new DBox(2, 20);
+  dbox[3] = new DBox(3, 20);
 
   //-------------------------------------------------------------
   //                     SET UP DUDLEYS
-  dud[0] = new Dudley(300, 500, 100, 0.005);
-  dud[1] = new Dudley(300, 300, 40, 0.008);
+  dud[0] = new Dudley(0, 300, 500, 100, 0.005);
+  dud[1] = new Dudley(1, 300, 300, 40, 0.008);
 
 
   //-------------------------------------------------------------
@@ -148,11 +150,13 @@ void draw() {
 
   //-------------------------------------------------------------
   //                       DBOX RENDERING
-  dbox[0].update();
-  dbox[1].update();
-  dbox[0].display();
-  dbox[1].display();
-  println(dbox[1].detect(mouseX, mouseY));
+
+  for(int id = 0; id<dbox.length; id++) {
+    dbox[id].update();
+    dbox[id].detect(dud);
+    dbox[id].display();
+  }
+
 
   //-------------------------------------------------------------
   //                      DUDLEY RENDERING
@@ -164,11 +168,11 @@ void draw() {
 //-------------------------------------------------------------
 //                  RECEIVING CLIENT : listen to osc 
 void oscEvent(OscMessage msg) {
-  print("### OSC message at ");
-  print(millis() + " ms");
-  print(" addrpattern: "+msg.addrPattern());
-  println(" typetag: "+msg.typetag());
-  println("### " + msg.get(0).intValue()+", "+ msg.get(1).intValue());
+  //  print("### OSC message at ");
+  //  print(millis() + " ms");
+  //  print(" addrpattern: "+msg.addrPattern());
+  //  println(" typetag: "+msg.typetag());
+  //  println("### " + msg.get(0).intValue()+", "+ msg.get(1).intValue());
 }
 
 
