@@ -89,15 +89,6 @@ class Camera {
     //        popMatrix();
     //      }
     //    }    
-
-    pushMatrix();
-    t += v;
-    r = r_ *( 1 + 0.4 * sin(t*8.15));
-    stroke(255);
-    strokeWeight(20);
-    point(r*cos(t), r*sin(t));
-    popMatrix();
-
     popMatrix();
   }
 

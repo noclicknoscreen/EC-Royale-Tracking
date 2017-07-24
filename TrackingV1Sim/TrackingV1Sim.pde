@@ -36,6 +36,7 @@ Camera cam0, cam1;     // cameras
 Camera cam2;
 int cam0N, cam1N;
 DBox[] dbox = new DBox[2];
+Dudley[] dud = new Dudley[2];
 OscP5 oscP5;                 // open sound control : send data
 NetAddress destination; // ip adresse for osc communication
 ControlP5 cp5;               // UI Control
@@ -50,12 +51,6 @@ final static boolean SIMULATION = true;
 JSONObject data;             // data stored from previous session
 
 
-// Simulation variables
-float  t = 0;    // time init
-float  v = 0.005; // rotation speed
-float r;
-float  r_ = 100; // rotation radius
-float  s = 20;   // size of the ellipse
 
 void setup() {
   size(1080, 720);
@@ -88,6 +83,11 @@ void setup() {
   dbox[0] = new DBox(0, 20);
   dbox[1] = new DBox(1, 20);
 
+  //-------------------------------------------------------------
+  //                     SET UP DUDLEYS
+  dud[0] = new Dudley(300, 500, 100, 0.005);
+  dud[1] = new Dudley(300, 300, 40, 0.008);
+
 
   //-------------------------------------------------------------
   //                      SETUP OSC COMMUNICATION
@@ -108,7 +108,7 @@ void setup() {
 
 void draw() { 
   background(140, 140, 140);
-  
+
   //  //-------------------------------------------------------------
   //  //                        UPDATE CAMERAS
   //  // update all cams
@@ -153,6 +153,12 @@ void draw() {
   dbox[0].display();
   dbox[1].display();
   println(dbox[1].detect(mouseX, mouseY));
+
+  //-------------------------------------------------------------
+  //                      DUDLEY RENDERING
+  for (int i = 0; i < dud.length; i++) {
+    dud[i].display();
+  }
 }
 
 //-------------------------------------------------------------
