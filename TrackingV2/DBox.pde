@@ -14,6 +14,7 @@ class DBox {
   int id;                             // dbox id
   int opacity = 50;                   // display opacity
   int population = 0;                 // detection state
+  float distance = -1;
   float hsize = 10;                   // handle size
   Handle[] handles = new Handle[4];   // handles declaration
   Vect2[] vertices = new Vect2[4];    // vertices for polygon detection
@@ -43,7 +44,32 @@ class DBox {
 
 
   //---------------------------------------------------------------------------
-  //                      OUTPUT FUNCTION
+  //                      OUTPUT FUNCTIONS
+
+  float closestDistance(ArrayList<PVector> userPosCam) {
+    Vect2 linePoint1 = new Vect2(handles[0].getX(), handles[0].getY());
+    Vect2 linePoint2 = new Vect2(handles[1].getX(), handles[1].getY());
+    int n = userPosCam.size();
+    if (n>0) {
+      Vect2[] testPoints = new Vect2[n];
+      for (int i=0; i<n; i++) {
+        testPoints[i] = new Vect2(userPosCam.get(i).x, userPosCam.get(i).y);
+      }
+      int closestPointIndex = Space2.closestPointToLine(testPoints, linePoint1, linePoint2);
+      Vect2 closestPoint = testPoints[closestPointIndex];
+      distance = Space2.pointToLineDistance(closestPoint, linePoint1, linePoint2);
+      return distance;
+    } else {
+      distance = -1;
+      return distance;
+    }
+  }
+
+  boolean isInside(PVector user) {
+    Vect2 coor = new Vect2(user.x, user.y);
+    return Space2.insidePolygon(coor, vertices);
+  }
+
   int countPopulation(ArrayList<PVector> userPosCam) {
     population = 0;
     for (int k=0; k<userPosCam.size (); k++) {
@@ -99,6 +125,13 @@ class DBox {
     }
     endShape(CLOSE);
 
+    stroke(255, 0, 0);
+    strokeWeight(2);
+    beginShape();
+    vertex(handles[0].getX(), handles[0].getY());
+    vertex(handles[1].getX(), handles[1].getY());
+    endShape();
+
     // display handles
     for (int i = 0; i < handles.length; i++) {
       handles[i].display(i);
@@ -109,7 +142,7 @@ class DBox {
     textSize(10);
     float tempX = handles[0].getX();
     float tempY = handles[0].getY();
-    text("ID "+ id + " / population: " + population, tempX + 10, tempY - 10);
+    text("ID "+ id + " / population: " + population + " / distance: " + distance, tempX + 10, tempY - 10);
   }
 
   //---------------------------------------------------------------------------

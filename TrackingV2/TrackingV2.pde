@@ -133,8 +133,6 @@ void draw() {
   cam0UserPos = cam[0].renderUserPos();
   cam1UserPos = cam[1].renderUserPos();
   cam2UserPos = cam[2].renderUserPos();
-  println("cam" + cam1UserPos);
-  println("mouse " + mouseX +" " + mouseY);
   popMatrix();
 
   // Display framerate (style in Toolbox)
@@ -159,7 +157,7 @@ void draw() {
   dbox[2].update();
   dbox[2].countPopulation(cam2UserPos);
   dbox[2].display();
-
+  println(dbox[1].closestDistance(cam1UserPos));
 
   //-------------------------------------------------------------
   //                      DUDLEY RENDERING

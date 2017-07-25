@@ -87,8 +87,11 @@ class Camera {
         strokeWeight(20);
         float Zplan = map(com.z, 0, 8000, 0, Htemp);
         float Xplan = map(com.x, 3000, -3000, 0, Htemp*sin(fieldOfView));
-        point(Zplan, Xplan - 180);
-        comUsers.add(new PVector(screenX(Zplan, Xplan-180), screenY(Zplan, Xplan-180)));
+        PVector potentialUser =new PVector(screenX(Zplan, Xplan-180), screenY(Zplan, Xplan-180));
+        if (dbox[id].isInside(potentialUser)) {
+          comUsers.add(potentialUser);
+          point(Zplan, Xplan - 180);
+        }
         popMatrix();
       }
     }    
