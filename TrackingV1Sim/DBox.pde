@@ -44,24 +44,22 @@ class DBox {
 
   //---------------------------------------------------------------------------
   //                      OUTPUT FUNCTION
-
-  int countPopulation(Dudley[] dud) {
-    population = 0;
-    for (int k=0; k<dud.length; k++) {
-      Vect2 coor = new Vect2(dud[k].getX(), dud[k].getY());
-      if (Space2.insidePolygon(coor, vertices)) {
-        dud[k].setZone(id);
-        population += 1;
-      };
-    }
-    if (population > 0) {
-      opacity = 60;
-    } else {
-      opacity = 5;
-    }
-    return population;
-  }
-
+//  int countPopulation(Dudley[] dud) {
+//    population = 0;
+//    for (int k=0; k<dud.length; k++) {
+//      Vect2 coor = new Vect2(dud[k].getX(), dud[k].getY());
+//      if (Space2.insidePolygon(coor, vertices)) {
+//        dud[k].setZone(id);
+//        population += 1;
+//      };
+//    }
+//    if (population > 0) {
+//      opacity = 60;
+//    } else {
+//      opacity = 5;
+//    }
+//    return population;
+//  }
   //----------------------------------------------------------------------------
   //                       DBOX UPDATE 
   void update() {

@@ -33,7 +33,7 @@ import netP5.*;
 import controlP5.*;
 
 Camera cam0, cam1;     // cameras 
-//Camera cam2;
+Camera cam2;
 int cam0N, cam1N;
 DBox dbox0, dbox1;
 OscP5 oscP5;                 // open sound control : send data
@@ -70,7 +70,7 @@ void setup() {
   // Camera objects store metadata on cameras, like position, etc
   cam0 = new Camera(0);
   cam1 = new Camera(1);
-  //  cam2 = new Camera(2);
+  cam2 = new Camera(2);
   
   //-------------------------------------------------------------
   //                     SETUP DETECTION BOX
@@ -109,7 +109,7 @@ void draw() {
   // display all cams depth view
   cam0.displayView(0, 0);
   cam1.displayView(viewWidth, 0);
-  //  cam2.displayView(0, viewHeight);
+  cam2.displayView(0, viewHeight);
 
   // shift to virtual room area
   pushMatrix();

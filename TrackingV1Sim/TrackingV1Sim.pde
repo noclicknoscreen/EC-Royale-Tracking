@@ -30,7 +30,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // SIMULATION MODE: virtual walking users called Dudleys can be generated 
 // instead of using Kinect camera data
-final static boolean SIMULATION = true; 
+final static boolean SIMULATION = false; 
 ///////////////////////////////////////////////////////////////////////////////
 
 import SimpleOpenNI.*;
@@ -46,10 +46,10 @@ NetAddress destination;           // ip adress for osc communication
 ControlP5 cp5;                    // UI Control
 
 final static float fieldOfView = 0.84823; // kinect v1 field of view angle in radians
-final static int roomWidth = 600;         // room (real) width and height in millimeters 
+final static int roomWidth = 640;         // room (real) width and height in millimeters 
 final static int roomHeight = 480;        // TODO : custom coor sys to have real dimensions    
-final static int viewWidth = 640/2;       // view width scaling for rendering on screen
-final static int viewHeight = 480/2;      
+final static int viewWidth = 640/4;       // view width scaling for rendering on screen
+final static int viewHeight = 480/4;      
 JSONObject data;                          // data stored from previous session
 
 void setup() {
@@ -86,9 +86,9 @@ void setup() {
 
   //-------------------------------------------------------------
   //                     SET UP DUDLEYS
-  dud[0] = new Dudley(0, 300, 500, 100, 0.005);
-  dud[1] = new Dudley(1, 300, 300, 40, 0.008);
-  dud[2] = new Dudley(2, 300, 400, 70, 0.010);
+//  dud[0] = new Dudley(0, 300, 500, 100, 0.005);
+//  dud[1] = new Dudley(1, 300, 300, 40, 0.008);
+//  dud[2] = new Dudley(2, 300, 400, 70, 0.010);
 
 
   //-------------------------------------------------------------
@@ -123,9 +123,9 @@ void draw() {
 
   if (!SIMULATION) {
     // display all cams depth view
-//    cam[0].displayView(0, 0);
-//    cam[1].displayView(viewWidth, 0);
-    //  cam2.displayView(0, viewHeight);
+cam[0].displayView(width-viewWidth, 0);
+cam[1].displayView(width-viewWidth, viewHeight);
+cam[2].displayView(width-viewWidth, 2*viewHeight);
   }
 
   // shift to virtual room area
@@ -156,15 +156,15 @@ void draw() {
 
   for (int id = 0; id<dbox.length; id++) {
     dbox[id].update();
-    dbox[id].countPopulation(dud);
+//    dbox[id].countPopulation(dud);
     dbox[id].display();
   }
 
   //-------------------------------------------------------------
   //                      DUDLEY RENDERING
-  for (int i = 0; i < dud.length; i++) {
-    dud[i].display();
-  }
+//  for (int i = 0; i < dud.length; i++) {
+//    dud[i].display();
+//  }
 }
 
 //-------------------------------------------------------------

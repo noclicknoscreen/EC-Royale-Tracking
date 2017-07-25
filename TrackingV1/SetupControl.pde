@@ -67,31 +67,31 @@ void setupControl() {
   makeEditable(pos1y);
   makeEditable(ang1);
   ang1.getValueLabel().setText(str(int(degrees(cam1.getAng()))));
-  //
-  //  pos2x = cp5.addNumberbox("pos2x")
-  //    .setSize(70, 20)
-  //      .setRange(0, roomWidth)
-  //        .setPosition(30 + 70 + 30, 2*480/2 - 40)
-  //          .setDirection(Controller.HORIZONTAL)
-  //            .setValue(int(cam2.getX_init()))
-  //              ;
-  //  pos2y = cp5.addNumberbox("pos2y")
-  //    .setSize(70, 20)
-  //      .setRange(0, roomHeight)
-  //        .setPosition(30+ 70 +30 +70 +30, 2*480/2 - 40)
-  //          .setValue(int(cam2.getY_init()))
-  //            ;
-  //  ang2 = cp5.addNumberbox("ang2")
-  //    .setSize(70, 20)
-  //      .setRange(0, 360)
-  //        .setPosition(30, 2*480/2 - 40)
-  //          .setDirection(Controller.HORIZONTAL)
-  //            .setValue(int(degrees(cam2.getAng_init())))
-  //              ;
-  //  makeEditable(pos2x);
-  //  makeEditable(pos2y);
-  //  makeEditable(ang2);
-  //  ang2.getValueLabel().setText(str(int(degrees(cam2.getAng()))));
+
+  pos2x = cp5.addNumberbox("pos2x")
+    .setSize(70, 20)
+      .setRange(0, roomWidth)
+        .setPosition(30 + 70 + 30, 2*480/2 - 40)
+          .setDirection(Controller.HORIZONTAL)
+            .setValue(int(cam2.getX_init()))
+              ;
+  pos2y = cp5.addNumberbox("pos2y")
+    .setSize(70, 20)
+      .setRange(0, roomHeight)
+        .setPosition(30+ 70 +30 +70 +30, 2*480/2 - 40)
+          .setValue(int(cam2.getY_init()))
+            ;
+  ang2 = cp5.addNumberbox("ang2")
+    .setSize(70, 20)
+      .setRange(0, 360)
+        .setPosition(30, 2*480/2 - 40)
+          .setDirection(Controller.HORIZONTAL)
+            .setValue(int(degrees(cam2.getAng_init())))
+              ;
+  makeEditable(pos2x);
+  makeEditable(pos2y);
+  makeEditable(ang2);
+  ang2.getValueLabel().setText(str(int(degrees(cam2.getAng()))));
 
 
   cp5.addButton("save")
@@ -119,17 +119,17 @@ void pos1y(int v) {
 void ang1(int v) {
   cam1.setAng(radians(v));
 }
-//void pos2x(int v) {
-//  cam2.setX(v);
-//}
-//void pos2y(int v) {
-//  cam2.setY(v);
-//}
-//void ang2(int v) {
-//  cam2.setAng(radians(v));
-//}
-//
-//
+void pos2x(int v) {
+  cam2.setX(v);
+}
+void pos2y(int v) {
+  cam2.setY(v);
+}
+void ang2(int v) {
+  cam2.setAng(radians(v));
+}
+
+
 
 void save(int v) {
   data.setFloat("cam0X", cam0.getX());

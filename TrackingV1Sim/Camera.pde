@@ -1,5 +1,5 @@
 class Camera {
-  //  SimpleOpenNI kin;                        // intepreter of kinect data
+  SimpleOpenNI kin;                        // intepreter of kinect data
   int id;                                  // kinect custom id :  0, 1, 2 or 3
   float camX_init, camY_init, camang_init; // var from previous session
   float camX, camY, camang;                // real-time variables for cam coor     
@@ -25,30 +25,30 @@ class Camera {
     camang_init = data.getFloat("cam" + id + "ang");
 
     //    // kinect initialization
-    //    kin = new SimpleOpenNI(id, TrackingV1.this);
-    //    this.id = id;
+    kin = new SimpleOpenNI(id, TrackingV1Sim.this);
+    this.id = id;
 
-    //    // initialization callback
-    //    if (kin.isInit() == false) {
-    //      println("Verify that you have connected camera n° " + id); 
-    //      exit();
-    //      return;
-    //    } else {
-    //      println("Kinect " + id + " : init OK");
-    //    }
-    //
-    //    // set the camera generators 
-    //    kin.enableDepth();
-    //    kin.enableUser();
+    // initialization callback
+    if (kin.isInit() == false) {
+      println("Verify that you have connected camera n° " + id); 
+      exit();
+      return;
+    } else {
+      println("Kinect " + id + " : init OK");
+    }
+
+    // set the camera generators 
+    kin.enableDepth();
+    kin.enableUser();
   }
 
-  //  //-----------------------------------------------------------------------
-  //  //                        DISPLAY VIEW 
-  //  void displayView(float x, float y) {
-  //    view = kin.userImage().get();   // get a copy of the depth image
-  //    view.resize(viewWidth, viewHeight);          // resize it
-  //    image(view, x, y);
-  //  }
+  //-----------------------------------------------------------------------
+  //                        DISPLAY VIEW 
+  void displayView(float x, float y) {
+    view = kin.userImage().get();   // get a copy of the depth image
+    view.resize(viewWidth, viewHeight);          // resize it
+    image(view, x, y);
+  }
 
 
   //-----------------------------------------------------------------------
@@ -75,21 +75,21 @@ class Camera {
     float Htempmax = map(6000, 0, 8000, 20, roomWidth);
     arc(0, 0, Htemp, Htemp, -fieldOfView/2, fieldOfView/2);
 
-    //    // draw users center of mass 
-    //    int numberOfUsers = 0;
-    //    int[] userList1 = kin.getUsers();
-    //    for (int i=0; i<userList1.length; i++) {   
-    //      if (kin.getCoM(userList1[i], com) && com.z != 0) {
-    //        numberOfUsers += 1;
-    //        pushMatrix();
-    //        stroke(userClr[i % userClr.length] );
-    //        strokeWeight(20);
-    //        float Zplan = map(com.z, 0, 8000, 0, Htemp);
-    //        float Xplan = map(com.x, 3000, -3000, 0, Htemp*sin(fieldOfView));
-    //        point(Zplan, Xplan - 180);
-    //        popMatrix();
-    //      }
-    //    }    
+    // draw users center of mass 
+    int numberOfUsers = 0;
+    int[] userList1 = kin.getUsers();
+    for (int i=0; i<userList1.length; i++) {   
+      if (kin.getCoM(userList1[i], com) && com.z != 0) {
+        numberOfUsers += 1;
+        pushMatrix();
+        stroke(userClr[i % userClr.length] );
+        strokeWeight(20);
+        float Zplan = map(com.z, 0, 8000, 0, Htemp);
+        float Xplan = map(com.x, 3000, -3000, 0, Htemp*sin(fieldOfView));
+        point(Zplan, Xplan - 180);
+        popMatrix();
+      }
+    }    
     popMatrix();
   }
 
