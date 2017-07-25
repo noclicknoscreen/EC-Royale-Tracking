@@ -9,8 +9,6 @@
  *******************************************************************************************/
 import controlP5.*;
 
-
-
 // ControlP5 editable
 // allows the user to click a numberbox and type in a number which is confirmed with RETURN
 void makeEditable( Numberbox n ) {

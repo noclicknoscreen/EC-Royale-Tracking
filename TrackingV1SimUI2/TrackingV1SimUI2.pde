@@ -38,25 +38,21 @@ import oscP5.*;
 import netP5.*;
 import controlP5.*;
 
-final static int N=4;             // number of cameras
+Camera[] cam = new Camera[3];     // cameras
+DBox[] dbox = new DBox[3];        // detection box
+Dudley[] dud = new Dudley[3];     // Dudleys for simulation
+OscP5 oscP5;                      // open sound control : send data
+NetAddress destination;           // ip adress for osc communication
+ControlP5 cp5;                    // UI Control
+
 final static float fieldOfView = 0.84823; // kinect v1 field of view angle in radians
 final static int roomWidth = 600;         // room (real) width and height in millimeters 
 final static int roomHeight = 480;        // TODO : custom coor sys to have real dimensions    
 final static int viewWidth = 640/2;       // view width scaling for rendering on screen
 final static int viewHeight = 480/2;      
-
-Camera[] cam = new Camera[N];     // cameras
-DBox[] dbox = new DBox[N];        // detection box
-Dudley[] dud = new Dudley[N];     // Dudleys for simulation
-ControlP5 cp5;                    // ControlP5
-OscP5 oscP5;                      // open sound control : send data
-NetAddress destination;           // ip adress for osc communication
-
 JSONObject data;                          // data stored from previous session
 
 void setup() {
-  //-------------------------------------------------------------
-  //                   APPLET SETTINGS
   size(1080, 720);
   frameRate(30);
 
@@ -78,9 +74,9 @@ void setup() {
   }
 
   // Camera objects store metadata on cameras, like position, etc
-  cam[0] = new Camera(0, cam);
-  cam[1] = new Camera(1, cam);
-  cam[2] = new Camera(2, cam);
+  cam[0] = new Camera(0);
+  cam[1] = new Camera(1);
+  cam[2] = new Camera(2);
 
   //-------------------------------------------------------------
   //                     SETUP DETECTION BOX
@@ -104,10 +100,12 @@ void setup() {
   // 192.168.X.X  for external destination  (port should be different from home reception)
   destination = new NetAddress("127.0.0.1", 12000);
 
+
   //-------------------------------------------------------------
-  //                      CONTROLP5
+  //                      SET UP USER INTERFACE
   // controlP5 lib for controllers : buttons, sliders, etc
   cp5 = new ControlP5(this);
+  setupControl();
 }
 
 void draw() { 
@@ -125,9 +123,9 @@ void draw() {
 
   if (!SIMULATION) {
     // display all cams depth view
-    cam[0].displayView(0, 0);
-    cam[1].displayView(viewWidth, 0);
-    cam[2].displayView(0, viewHeight);
+//    cam[0].displayView(0, 0);
+//    cam[1].displayView(viewWidth, 0);
+    //  cam2.displayView(0, viewHeight);
   }
 
   // shift to virtual room area
@@ -137,6 +135,7 @@ void draw() {
   noStroke();
   rect(20, 0, roomWidth, roomHeight);
   // get position on plan and render it
+  // returns number of users
   cam[0].renderUserPos();
   cam[1].renderUserPos();
   cam[2].renderUserPos();
@@ -182,7 +181,6 @@ void oscEvent(OscMessage msg) {
 void mouseReleased() {
   for (int id = 0; id<dbox.length; id++) {
     dbox[id].releaseEvent();
-    cam[id].releaseEvent();
   }
 }
 
