@@ -40,16 +40,17 @@ Dudley[] dud = new Dudley[3];     // Dudleys for simulation
 OscP5 oscP5;                      // open sound control : send data
 NetAddress destination;           // ip adress for osc communication
 ControlP5 cp5;                    // UI Control
+ArrayList<PVector> cam0UserPos, cam1UserPos, cam2UserPos;
 
 final static float fieldOfView = 0.84823; // kinect v1 field of view angle in radians
-final static int roomWidth = 700;         // room  width and height 
-final static int roomHeight = 350;        // TODO : custom coor sys to have real dimensions    
+final static int roomWidth = 800;         // room  width and height 
+final static int roomHeight = 600;        // TODO : custom coor sys to have real dimensions    
 final static int viewWidth = 640/2;       // view width scaling for rendering on screen
 final static int viewHeight = 480/2;      
 JSONObject data;                          // data stored from previous session
 
 void setup() {
-  size(1080, 720);
+  size(1200, 900);
   frameRate(30);
 
   //-------------------------------------------------------------
@@ -129,9 +130,11 @@ void draw() {
   noStroke();
   rect(20, 0, roomWidth, roomHeight);
   // get position on plan and render it
-  cam[0].renderUserPos();
-  cam[1].renderUserPos();
-  cam[2].renderUserPos();
+  cam0UserPos = cam[0].renderUserPos();
+  cam1UserPos = cam[1].renderUserPos();
+  cam2UserPos = cam[2].renderUserPos();
+  println("cam" + cam1UserPos);
+  println("mouse " + mouseX +" " + mouseY);
   popMatrix();
 
   // Display framerate (style in Toolbox)
@@ -146,11 +149,17 @@ void draw() {
   //-------------------------------------------------------------
   //                       DBOX RENDERING
 
-  for (int id = 0; id<dbox.length; id++) {
-    dbox[id].update();
-    //   dbox[id].countPopulation(dud);
-    dbox[id].display();
-  }
+
+  dbox[0].update();
+  dbox[0].countPopulation(cam0UserPos);
+  dbox[0].display();
+  dbox[1].update();
+  dbox[1].countPopulation(cam1UserPos);
+  dbox[1].display();
+  dbox[2].update();
+  dbox[2].countPopulation(cam2UserPos);
+  dbox[2].display();
+
 
   //-------------------------------------------------------------
   //                      DUDLEY RENDERING

@@ -22,7 +22,7 @@ class DBox {
   //                      DBOX CONSTRUCTOR
   DBox(int id, float dsize) {
     this.id = id;
-    
+
     // read data from previous session
     handles[0] = new Handle(getDBoxDataCoor(id, 0).x, getDBoxDataCoor(id, 0).y, 0, 0, hsize, handles);
     handles[1] = new Handle(getDBoxDataCoor(id, 1).x, getDBoxDataCoor(id, 1).y, 0, 0, hsize, handles);
@@ -44,22 +44,38 @@ class DBox {
 
   //---------------------------------------------------------------------------
   //                      OUTPUT FUNCTION
-//  int countPopulation(Dudley[] dud) {
-//    population = 0;
-//    for (int k=0; k<dud.length; k++) {
-//      Vect2 coor = new Vect2(dud[k].getX(), dud[k].getY());
-//      if (Space2.insidePolygon(coor, vertices)) {
-//        dud[k].setZone(id);
-//        population += 1;
-//      };
-//    }
-//    if (population > 0) {
-//      opacity = 60;
-//    } else {
-//      opacity = 5;
-//    }
-//    return population;
-//  }
+  int countPopulation(ArrayList<PVector> userPosCam) {
+    population = 0;
+    for (int k=0; k<userPosCam.size (); k++) {
+      Vect2 coor = new Vect2(userPosCam.get(k).x, userPosCam.get(k).y);
+      if (Space2.insidePolygon(coor, vertices)) {
+        population += 1;
+      };
+    }
+    if (population > 0) {
+      opacity = 60;
+    } else {
+      opacity = 5;
+    }
+    return population;
+  }
+
+  //  int countPopulation(Dudley[] dud) {
+  //    population = 0;
+  //    for (int k=0; k<dud.length; k++) {
+  //      Vect2 coor = new Vect2(dud[k].getX(), dud[k].getY());
+  //      if (Space2.insidePolygon(coor, vertices)) {
+  //        dud[k].setZone(id);
+  //        population += 1;
+  //      };
+  //    }
+  //    if (population > 0) {
+  //      opacity = 60;
+  //    } else {
+  //      opacity = 5;
+  //    }
+  //    return population;
+  //  }
   //----------------------------------------------------------------------------
   //                       DBOX UPDATE 
   void update() {
@@ -71,6 +87,7 @@ class DBox {
   //---------------------------------------------------------------------------
   //                      DBOX DISPLAY
   void display() {
+
     // vertex for polygon shape
     fill(255, 255, 255, opacity);
     stroke(0);

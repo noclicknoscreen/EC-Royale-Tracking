@@ -143,15 +143,15 @@ void ang2(int v) {
 
 
 void save(int v) {
-  data.setFloat("cam[0]X", cam[0].getX());
-  data.setFloat("cam[0]Y", cam[0].getY());
-  data.setFloat("cam[0]ang", cam[0].getAng());
-  data.setFloat("cam[1]X", cam[1].getX());
-  data.setFloat("cam[1]Y", cam[1].getY());
-  data.setFloat("cam[1]ang", cam[1].getAng());
-  data.setFloat("cam[2]X", cam[2].getX());
-  data.setFloat("cam[2]Y", cam[2].getY());
-  data.setFloat("cam[2]ang", cam[2].getAng());
+  data.setFloat("cam0X", cam[0].getX());
+  data.setFloat("cam0Y", cam[0].getY());
+  data.setFloat("cam0ang", cam[0].getAng());
+  data.setFloat("cam1X", cam[1].getX());
+  data.setFloat("cam1Y", cam[1].getY());
+  data.setFloat("cam1ang", cam[1].getAng());
+  data.setFloat("cam2X", cam[2].getX());
+  data.setFloat("cam2Y", cam[2].getY());
+  data.setFloat("cam2ang", cam[2].getAng());
   for (int id = 0; id < dbox.length; id ++) {
     for (int ihandle = 0; ihandle < 4; ihandle++) {
       saveDBoxHandle(id, ihandle);

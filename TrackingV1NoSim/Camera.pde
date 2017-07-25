@@ -5,8 +5,9 @@ class Camera {
   float camX, camY, camang;                // real-time variables for cam coor     
   PImage view;                             // view for rendering depth map on screen
   PVector com = new PVector();             // var to store center of mass, reused for each user
-  
-    color[] userClr = new color[] {    // custom user color list
+  ArrayList<PVector> comUsers; 
+
+  color[] userClr = new color[] {    // custom user color list
     color(0, 0, 255), 
     color(0, 255, 0), 
     color(255, 255, 0), 
@@ -44,17 +45,17 @@ class Camera {
 
   //-----------------------------------------------------------------------
   //                        DISPLAY VIEW 
-  void displayView(float x, float y) {
+  void displayView(float x_, float y_) {
     view = kin.userImage().get();   // get a copy of the depth image
     view.resize(viewWidth, viewHeight);          // resize it
-    image(view, x, y);
+    image(view, x_, y_);
   }
 
 
   //-----------------------------------------------------------------------
   //                        RENDER USER POSITIONS ON VIEWS
   // returns number of users with active center of mass
-  void renderUserPos() {
+  ArrayList<PVector> renderUserPos() {
     pushMatrix();
 
     // draw cam
@@ -66,30 +67,36 @@ class Camera {
     fill(255);
     textSize(10);
     text(id, 0, 0);
+
     rotate(-fieldOfView/2);
     // draw arc field of view
     fill(255, 255, 255, 30);
-    float Htemp = map(8000, 0, 8000, 20, roomWidth);
-    float Htempmin = map(1000, 0, 8000, 20, roomWidth);
-    float Htempmax = map(6000, 0, 8000, 20, roomWidth);
+    float Htemp = map(8000, 0, 8000, 20, 700);
+    float Htempmin = map(1000, 0, 8000, 20, 700);
+    float Htempmax = map(6000, 0, 8000, 20, 700);
     arc(0, 0, Htemp, Htemp, 0, fieldOfView);
 
     // draw users center of mass 
-    int numberOfUsers = 0;
     int[] userList1 = kin.getUsers();
+    comUsers = new ArrayList<PVector>(); 
     for (int i=0; i<userList1.length; i++) {   
       if (kin.getCoM(userList1[i], com) && com.z != 0) {
-        numberOfUsers += 1;
         pushMatrix();
-        stroke(userClr[i % userClr.length] );
+        //stroke(userClr[i % userClr.length] 
+        stroke(255);
         strokeWeight(20);
         float Zplan = map(com.z, 0, 8000, 0, Htemp);
         float Xplan = map(com.x, 3000, -3000, 0, Htemp*sin(fieldOfView));
         point(Zplan, Xplan - 180);
+        comUsers.add(new PVector(screenX(Zplan, Xplan-180), screenY(Zplan, Xplan-180)));
         popMatrix();
       }
     }    
     popMatrix();
+    // all transformations are cleared out now
+    // store absolute coordinates
+
+    return comUsers;
   }
 
   //-----------------------------------------------------------------------
