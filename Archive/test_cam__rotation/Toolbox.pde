@@ -9,9 +9,7 @@
  *******************************************************************************************/
 import controlP5.*;
 
-void angNB0(float v) {
-  vcam[0].setAng(radians(v));
-}
+
 
 // ControlP5 editable
 // allows the user to click a numberbox and type in a number which is confirmed with RETURN
@@ -33,6 +31,7 @@ void makeEditable( Numberbox n ) {
   }
   );
 }
+
 
 // input handler for a Numberbox that allows the user to 
 // key in numbers with the keyboard to change the value of the numberbox

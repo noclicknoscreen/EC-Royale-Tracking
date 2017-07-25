@@ -11,6 +11,7 @@
 import point2line.*;
 
 class VCam {
+  int id;
   float Ox, Oy;                        // initial position
   float x, y, ang;                          // vcam real time position
   float size = 20;                          // box size
@@ -20,30 +21,29 @@ class VCam {
   boolean press;                       // handle mouse state
   boolean locked = false;              // handle mouse state
   boolean otherslocked = false;        // true when at least one of the handles is locked
-  VCam[] others;                       // list of other vcams
   Vect2[] vertices = new Vect2[4];     // vertices
   Vect2[] tVertices = new Vect2[4];    // translated vertices
-  Numberbox angNB;                     // numberbox to edit ang
+  Numberbox angNB;
 
   //-----------------------------------------------------------------------------
   //                      VCAM CONSTRUCTOR
-  VCam(int id, float Ox, float Oy, float ang, VCam[] o) {
+  VCam(int id, float Ox, float Oy, float ang) {
+    this.id = id;
     this.Ox = Ox;
     this.Oy = Oy;
     this.ang = ang;
     x = Ox + xs - size/2;
     y = Oy + ys - size/2;
-    others = o;
 
     vertices[0] = new Vect2(-size/2, - size);
     vertices[1] = new Vect2(size/2, -size);
     vertices[2] = new Vect2(size/2, size);
     vertices[3] = new Vect2(-size/2, size);
 
-    angNB = cp5.addNumberbox("angNB" + id)
-      .setSize(70, 20)
+    angNB = cp5.addNumberbox("ang")
+      .setSize(35, 12)
         .setRange(0, 360)
-          .setPosition(30, 40)
+          .setPosition(x, y)
             .setDirection(Controller.HORIZONTAL)
               ;
     makeEditable(angNB);
@@ -57,25 +57,16 @@ class VCam {
     x = Ox+xs;
     y = Oy+ys;
 
-    // othersLocked is true when at least one of the objects is locked
-    for (int i=0; i<others.length; i++) {
-      if (others[i].locked == true) {
-        otherslocked = true;
-        break;
-      } else {
-        otherslocked = false;
-      }
-    }
+    overEvent();
+    pressEvent();
 
-    // if no object is locked, see if a object is clicked
-    if (otherslocked == false) {
-      overEvent();
-      pressEvent();
-    }
     if (press) {
       xs = mouseX - Ox;
       ys = mouseY - Oy;
     }
+    
+    angNB.setPosition(x-20, y-50);
+    ang = radians(angNB.getValue());
   }
   //-----------------------------------------------------------------------------
   //                       VCAM DISPLAY 
@@ -105,7 +96,8 @@ class VCam {
     endShape(CLOSE);
     popMatrix();
   }
-
+  //-----------------------------------------------------------------------------
+  //                      CONTROL
 
   //-----------------------------------------------------------------------------
   //                      MOUSE EVENTS
@@ -136,7 +128,9 @@ class VCam {
 
   //-----------------------------------------------------------------------------
   //                      GETTERS AND SETTERS
-
+  int getID() {
+    return id;
+  }
   float getX() {
     return x+size/2;
   }

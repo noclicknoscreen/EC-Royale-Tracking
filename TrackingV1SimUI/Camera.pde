@@ -5,7 +5,7 @@ class Camera {
   float camX, camY, camang;                // real-time variables for cam coor     
   PImage view;                             // view for rendering depth map on screen
   PVector com = new PVector();             // var to store center of mass, reused for each user
-  
+  VCam vcam;
     color[] userClr = new color[] {    // custom user color list
     color(0, 0, 255), 
     color(0, 255, 0), 
@@ -23,7 +23,9 @@ class Camera {
     camX_init =   data.getFloat("cam" + id + "X");  
     camY_init =   data.getFloat("cam" + id + "Y");
     camang_init = data.getFloat("cam" + id + "ang");
-
+    
+    // virtual camera initialization
+    vcam = new Vcam(id, camX_init, camY_init, camang_init, 
     //    // kinect initialization
     //    kin = new SimpleOpenNI(id, TrackingV1.this);
     //    this.id = id;
