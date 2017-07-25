@@ -13,7 +13,7 @@ import point2line.*;
 class DBox {
   int id;                             // dbox id
   int opacity = 50;                   // display opacity
-  boolean presenceDetected = false;   // detection state
+  int population = 0;                 // detection state
   float hsize = 10;                   // handle size
   Handle[] handles = new Handle[4];   // handles declaration
   Vect2[] vertices = new Vect2[4];    // vertices for polygon detection
@@ -46,21 +46,21 @@ class DBox {
   //---------------------------------------------------------------------------
   //                      OUTPUT FUNCTION
 
-  boolean detect(Dudley[] dud) {
-    presenceDetected = false;
+  int countPopulation(Dudley[] dud) {
+    population = 0;
     for (int k=0; k<dud.length; k++) {
       Vect2 coor = new Vect2(dud[k].getX(), dud[k].getY());
       if (Space2.insidePolygon(coor, vertices)) {
         dud[k].setZone(id);
-        presenceDetected = true;
+        population += 1;
       };
     }
-    if (presenceDetected) {
+    if (population > 0) {
       opacity = 150;
     } else {
       opacity = 5;
     }
-    return presenceDetected;
+    return population;
   }
 
   //----------------------------------------------------------------------------
@@ -93,7 +93,7 @@ class DBox {
     // display dbox id
     fill(0, 0, 0, 50);
     textSize(46);
-    text(id, handles[0].getX() + 10, handles[0].getY() + 40);
+    text(population, handles[0].getX() + 10, handles[0].getY() + 40);
   }
 
   //---------------------------------------------------------------------------

@@ -149,9 +149,9 @@ void draw() {
   //-------------------------------------------------------------
   //                       DBOX RENDERING
 
-  for(int id = 0; id<dbox.length; id++) {
+  for (int id = 0; id<dbox.length; id++) {
     dbox[id].update();
-    dbox[id].detect(dud);
+    dbox[id].countPopulation(dud);
     dbox[id].display();
   }
 
