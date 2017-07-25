@@ -27,11 +27,7 @@
  * ----------------------------------------------------------------------------
  */
 
-///////////////////////////////////////////////////////////////////////////////
-// SIMULATION MODE: virtual walking users called Dudleys can be generated 
-// instead of using Kinect camera data
-final static boolean SIMULATION = false; 
-///////////////////////////////////////////////////////////////////////////////
+
 
 import SimpleOpenNI.*;
 import oscP5.*;
@@ -63,15 +59,14 @@ void setup() {
 
   //-------------------------------------------------------------
   //                   SET UP SIMPLE OPEN NI
-  if (!SIMULATION) {
-    // start OpenNI, load the library
-    SimpleOpenNI.start();
+  // start OpenNI, load the library
+  SimpleOpenNI.start();
 
-    // print all the cams 
-    StrVector strList = new StrVector();
-    SimpleOpenNI.deviceNames(strList);
-    println(strList.size() + " kinect detected");
-  }
+  // print all the cams 
+  StrVector strList = new StrVector();
+  SimpleOpenNI.deviceNames(strList);
+  println(strList.size() + " kinect detected");
+
 
   // Camera objects store metadata on cameras, like position, etc
   cam[0] = new Camera(0);
@@ -114,19 +109,18 @@ void draw() {
   //-------------------------------------------------------------
   //                        UPDATE CAMERAS
   // update all cams
-  if (!SIMULATION) {
-    SimpleOpenNI.updateAll();
-  }
+  SimpleOpenNI.updateAll();
+
 
   //-------------------------------------------------------------
   //                      DISPLAY DASHBOARD
 
-  if (!SIMULATION) {
-    // display all cams depth view
-    cam[0].displayView(width-viewWidth, 0);
-    cam[1].displayView(width-viewWidth, viewHeight);
-    cam[2].displayView(width-viewWidth, 2*viewHeight);
-  }
+
+  // display all cams depth view
+  cam[0].displayView(width-viewWidth, 0);
+  cam[1].displayView(width-viewWidth, viewHeight);
+  cam[2].displayView(width-viewWidth, 2*viewHeight);
+
 
   // shift to virtual room area
   pushMatrix();
