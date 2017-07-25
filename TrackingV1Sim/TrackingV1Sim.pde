@@ -27,30 +27,30 @@
  * ----------------------------------------------------------------------------
  */
 
+///////////////////////////////////////////////////////////////////////////////
+// SIMULATION MODE: virtual walking users called Dudleys can be generated 
+// instead of using Kinect camera data
+final static boolean SIMULATION = true; 
+///////////////////////////////////////////////////////////////////////////////
+
 import SimpleOpenNI.*;
 import oscP5.*;
 import netP5.*;
 import controlP5.*;
 
-Camera cam0, cam1;     // cameras 
-Camera cam2;
-int cam0N, cam1N;
-DBox[] dbox = new DBox[2];
-Dudley[] dud = new Dudley[2];
-OscP5 oscP5;                 // open sound control : send data
-NetAddress destination; // ip adresse for osc communication
-ControlP5 cp5;               // UI Control
-
+Camera[] cam = new Camera[3];     // cameras
+DBox[] dbox = new DBox[3];        // detection box
+Dudley[] dud = new Dudley[3];     // Dudleys for simulation
+OscP5 oscP5;                      // open sound control : send data
+NetAddress destination;           // ip adress for osc communication
+ControlP5 cp5;                    // UI Control
 
 final static float fieldOfView = 0.84823; // kinect v1 field of view angle in radians
 final static int roomWidth = 600;         // room (real) width and height in millimeters 
-final static int roomHeight = 480;        // TODO : custom coor sys to have real dimensions
+final static int roomHeight = 480;        // TODO : custom coor sys to have real dimensions    
 final static int viewWidth = 640/2;       // view width scaling for rendering on screen
 final static int viewHeight = 480/2;      
-final static boolean SIMULATION = true; 
-JSONObject data;             // data stored from previous session
-
-
+JSONObject data;                          // data stored from previous session
 
 void setup() {
   size(1080, 720);
@@ -61,10 +61,10 @@ void setup() {
   // load data from previous session
   data = loadJSONObject("data/roomProfile.json");
 
-  //  //-------------------------------------------------------------
-  //  //                   SET UP SIMPLE OPEN NI
-  //  // start OpenNI, load the library
+  //-------------------------------------------------------------
+  //                   SET UP SIMPLE OPEN NI
   if (!SIMULATION) {
+    // start OpenNI, load the library
     SimpleOpenNI.start();
 
     // print all the cams 
@@ -74,19 +74,21 @@ void setup() {
   }
 
   // Camera objects store metadata on cameras, like position, etc
-  cam0 = new Camera(0);
-  cam1 = new Camera(1);
-  cam2 = new Camera(2);
+  cam[0] = new Camera(0);
+  cam[1] = new Camera(1);
+  cam[2] = new Camera(2);
 
   //-------------------------------------------------------------
   //                     SETUP DETECTION BOX
   dbox[0] = new DBox(0, 20);
   dbox[1] = new DBox(1, 20);
+  dbox[2] = new DBox(2, 20);
 
   //-------------------------------------------------------------
   //                     SET UP DUDLEYS
   dud[0] = new Dudley(0, 300, 500, 100, 0.005);
   dud[1] = new Dudley(1, 300, 300, 40, 0.008);
+  dud[2] = new Dudley(2, 300, 400, 70, 0.010);
 
 
   //-------------------------------------------------------------
@@ -109,41 +111,44 @@ void setup() {
 void draw() { 
   background(140, 140, 140);
 
-  //  //-------------------------------------------------------------
-  //  //                        UPDATE CAMERAS
-  //  // update all cams
-  //  SimpleOpenNI.updateAll();
+  //-------------------------------------------------------------
+  //                        UPDATE CAMERAS
+  // update all cams
+  if (!SIMULATION) {
+    SimpleOpenNI.updateAll();
+  }
 
-  //  //-------------------------------------------------------------
-  //  //                      DISPLAY DASHBOARD
-  //
-  //  // display all cams depth view
-  //  cam0.displayView(0, 0);
-  //  cam1.displayView(viewWidth, 0);
-  //  //  cam2.displayView(0, viewHeight);
+  //-------------------------------------------------------------
+  //                      DISPLAY DASHBOARD
+
+  if (!SIMULATION) {
+    // display all cams depth view
+//    cam[0].displayView(0, 0);
+//    cam[1].displayView(viewWidth, 0);
+    //  cam2.displayView(0, viewHeight);
+  }
 
   // shift to virtual room area
   pushMatrix();
   translate(0, 200);
-  fill(#DDDDDD);
+  fill(#AAAAAA);
   noStroke();
   rect(20, 0, roomWidth, roomHeight);
   // get position on plan and render it
   // returns number of users
-  cam0.renderUserPos();
-  cam1.renderUserPos();
-  cam2.renderUserPos();
+  cam[0].renderUserPos();
+  cam[1].renderUserPos();
+  cam[2].renderUserPos();
   //  cam2.renderUserPos();
   popMatrix();
 
-  // display Framerate (style in SetupControl)
+  // Display framerate (style in SetupControl)
   displayFramerate();
 
   //-------------------------------------------------------------
   //                         OUTPUT OSC
   OscMessage msg = new OscMessage("/camNumberOfUsers");
-  msg.add(cam0N);
-  msg.add(cam1N);
+  msg.add("blablabla");
   oscP5.send(msg, destination);
 
   //-------------------------------------------------------------
@@ -154,7 +159,6 @@ void draw() {
     dbox[id].countPopulation(dud);
     dbox[id].display();
   }
-
 
   //-------------------------------------------------------------
   //                      DUDLEY RENDERING
@@ -175,7 +179,8 @@ void oscEvent(OscMessage msg) {
 
 
 void mouseReleased() {
-  dbox[0].releaseEvent();
-  dbox[1].releaseEvent();
+  for (int id = 0; id<dbox.length; id++) {
+    dbox[id].releaseEvent();
+  }
 }
 

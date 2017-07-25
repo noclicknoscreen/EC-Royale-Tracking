@@ -21,9 +21,8 @@ class DBox {
   //-----------------------------------------------------------------------------
   //                      DBOX CONSTRUCTOR
   DBox(int id, float dsize) {
-
     this.id = id;
-
+    
     // read data from previous session
     handles[0] = new Handle(getDBoxDataCoor(id, 0).x - dsize/2, getDBoxDataCoor(id, 0).y - dsize/2, 0, 0, hsize, handles);
     handles[1] = new Handle(getDBoxDataCoor(id, 1).x + dsize/2, getDBoxDataCoor(id, 1).y - dsize/2, 0, 0, hsize, handles);
@@ -56,7 +55,7 @@ class DBox {
       };
     }
     if (population > 0) {
-      opacity = 150;
+      opacity = 60;
     } else {
       opacity = 5;
     }
@@ -91,9 +90,11 @@ class DBox {
     }
 
     // display dbox id
-    fill(0, 0, 0, 50);
-    textSize(46);
-    text(population, handles[0].getX() + 10, handles[0].getY() + 40);
+    fill(255);
+    textSize(10);
+    float tempX = handles[0].getX();
+    float tempY = handles[0].getY();
+    text("ID "+ id + " / population: " + population, tempX + 10, tempY - 10);
   }
 
   //---------------------------------------------------------------------------

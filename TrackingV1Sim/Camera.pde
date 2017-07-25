@@ -5,7 +5,7 @@ class Camera {
   float camX, camY, camang;                // real-time variables for cam coor     
   PImage view;                             // view for rendering depth map on screen
   PVector com = new PVector();             // var to store center of mass, reused for each user
-
+  VCam vcam;
     color[] userClr = new color[] {    // custom user color list
     color(0, 0, 255), 
     color(0, 255, 0), 
@@ -23,6 +23,9 @@ class Camera {
     camX_init =   data.getFloat("cam" + id + "X");  
     camY_init =   data.getFloat("cam" + id + "Y");
     camang_init = data.getFloat("cam" + id + "ang");
+    
+    // Virtual camera initialization
+    vcam = new VCam(camX_init, camY_init, 
 
     //    // kinect initialization
     //    kin = new SimpleOpenNI(id, TrackingV1.this);
@@ -61,14 +64,15 @@ class Camera {
     translate(camX, camY);
     rotate(camang);
     noStroke();
-    fill(#000000);
+    fill(0);
     rect(0-20/2, 0-40/2, 20, 40);
-    fill(#FFFFFF);
+    fill(255);
     textSize(10);
     text(id, 0, 0);
+    println(id);
 
     // draw arc field of view
-    fill(155, 155, 155, 155);
+    fill(255, 255, 255, 30);
     float Htemp = map(8000, 0, 8000, 20, roomWidth);
     float Htempmin = map(1000, 0, 8000, 20, roomWidth);
     float Htempmax = map(6000, 0, 8000, 20, roomWidth);
