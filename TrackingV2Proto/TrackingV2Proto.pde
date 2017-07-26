@@ -41,6 +41,8 @@ OscP5 oscP5;                      // open sound control : send data
 NetAddress destination;           // ip adress for osc communication
 ControlP5 cp5;                    // UI Control
 ArrayList<PVector> cam0UserPos, cam1UserPos, cam2UserPos;
+int[] populations = new int[4];
+float[] distances = new float[4];
 
 final static float fieldOfView = 0.84823; // kinect v1 field of view angle in radians
 final static int roomWidth = 800;         // room  width and height 
@@ -50,7 +52,7 @@ final static int viewHeight = 480/2;
 JSONObject data;                          // data stored from previous session
 
 void setup() {
-  size(1200, 900);
+  size(1500, 1000);
   frameRate(30);
 
   //-------------------------------------------------------------
@@ -90,11 +92,11 @@ void setup() {
   //-------------------------------------------------------------
   //                      SETUP OSC COMMUNICATION
   // RECEIVING : Start oscP5, listening for incoming messages at port 12000
-  oscP5 = new OscP5(this, 12000);
+  oscP5 = new OscP5(this, 12001);
   // SENDING : NetAdress : ip adress and port number for sending data
   // 127.0.0.1    to loop home              (send on home reception port)
   // 192.168.X.X  for external destination  (port should be different from home reception)
-  destination = new NetAddress("127.0.0.1", 12000);
+  destination = new NetAddress("192.168.2.130", 12000);
 
 
   //-------------------------------------------------------------
@@ -138,34 +140,61 @@ void draw() {
   // Display framerate (style in Toolbox)
   displayFramerate();
 
-  //-------------------------------------------------------------
-  //                         OUTPUT OSC
-  OscMessage msg = new OscMessage("/camNumberOfUsers");
-  msg.add("blablabla");
-  oscP5.send(msg, destination);
 
   //-------------------------------------------------------------
   //                       DBOX RENDERING
 
-
   dbox[0].update();
-  dbox[0].countPopulation(cam0UserPos);
+  populations[0] = dbox[0].countPopulation(cam0UserPos);  
+  distances[0] = dbox[0].closestDistance(cam0UserPos);
+//  distances[0] = dbox[0].mouseDistance();
+  //  populations[0] += dbox[0].countPopulation(dud); 
+  //  distances[0] = max(distances[0], dbox[0].closestDistance(dud));
   dbox[0].display();
   dbox[1].update();
-  dbox[1].countPopulation(cam1UserPos);
+  populations[1] = dbox[1].countPopulation(cam1UserPos);
+  distances[1] = dbox[1].closestDistance(cam1UserPos);
+//  distances[0] = dbox[1].mouseDistance();
+  //  populations[1] += dbox[1].countPopulation(dud); 
+  //  distances[1] = max(distances[1], dbox[1].closestDistance(dud));
   dbox[1].display();
   dbox[2].update();
-  dbox[2].countPopulation(cam2UserPos);
+  populations[2] = dbox[2].countPopulation(cam2UserPos);
+  distances[2] = dbox[2].closestDistance(cam2UserPos);
+//  distances[2] = dbox[1].mouseDistance();
+
+  //  populations[2] += dbox[2].countPopulation(dud); 
+  //  distances[2] = max(distances[2], dbox[2].closestDistance(dud));
   dbox[2].display();
-  println(dbox[1].closestDistance(cam1UserPos));
+
 
   //-------------------------------------------------------------
   //                      DUDLEY RENDERING
   //  for (int i = 0; i < dud.length; i++) {
   //    dud[i].display();
   //  }
+
+  //-------------------------------------------------------------
+  //                         OUTPUT OSC
+  sendOSC("/North/population", populations[1]);
+  sendOSC("/North/distance", distances[1]);
+  sendOSC("/West/population", populations[0]);
+  sendOSC("/West/distance", distances[0]);
+  sendOSC("/South/population", populations[2]);
+  sendOSC("/South/distance", distances[2]);
+//  println("OSC sent at frame " + frameCount);
 }
 
+void sendOSC(String title, float value) {
+  OscMessage msg = new OscMessage(title);
+  msg.add(value);
+  oscP5.send(msg, destination);
+}
+void sendOSC(String title, int value) {
+  OscMessage msg = new OscMessage(title);
+  msg.add(value);
+  oscP5.send(msg, destination);
+}
 //-------------------------------------------------------------
 //                  RECEIVING CLIENT : listen to osc 
 void oscEvent(OscMessage msg) {

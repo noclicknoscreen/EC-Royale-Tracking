@@ -46,6 +46,20 @@ class DBox {
   //---------------------------------------------------------------------------
   //                      OUTPUT FUNCTIONS
 
+  float mouseDistance() {
+    Vect2 linePoint1 = new Vect2(handles[0].getX(), handles[0].getY());
+    Vect2 linePoint2 = new Vect2(handles[1].getX(), handles[1].getY());
+    Vect2 mouseVect = new Vect2(mouseX, mouseY);
+    if (Space2.insidePolygon(mouseVect, vertices)) {
+      distance = Space2.pointToLineDistance(mouseVect, linePoint1, linePoint2);
+      distance = map(distance, -5, 400, 1, 0);
+    } else {
+      return 0;
+    }
+    return distance;
+  }
+
+
   float closestDistance(ArrayList<PVector> userPosCam) {
     Vect2 linePoint1 = new Vect2(handles[0].getX(), handles[0].getY());
     Vect2 linePoint2 = new Vect2(handles[1].getX(), handles[1].getY());
@@ -58,9 +72,10 @@ class DBox {
       int closestPointIndex = Space2.closestPointToLine(testPoints, linePoint1, linePoint2);
       Vect2 closestPoint = testPoints[closestPointIndex];
       distance = Space2.pointToLineDistance(closestPoint, linePoint1, linePoint2);
+      distance = map(distance, -5, 200, 1, 0);
       return distance;
     } else {
-      distance = -1;
+      distance = 0;
       return distance;
     }
   }
@@ -86,22 +101,42 @@ class DBox {
     return population;
   }
 
-  //  int countPopulation(Dudley[] dud) {
-  //    population = 0;
-  //    for (int k=0; k<dud.length; k++) {
-  //      Vect2 coor = new Vect2(dud[k].getX(), dud[k].getY());
-  //      if (Space2.insidePolygon(coor, vertices)) {
-  //        dud[k].setZone(id);
-  //        population += 1;
-  //      };
-  //    }
-  //    if (population > 0) {
-  //      opacity = 60;
-  //    } else {
-  //      opacity = 5;
-  //    }
-  //    return population;
-  //  }
+  int countPopulation(Dudley[] dud) {
+    population = 0;
+    for (int k=0; k<dud.length; k++) {
+      Vect2 coor = new Vect2(dud[k].getX(), dud[k].getY());
+      if (Space2.insidePolygon(coor, vertices)) {
+        dud[k].setZone(id);
+        population += 1;
+      };
+    }
+    if (population > 0) {
+      opacity = 60;
+    } else {
+      opacity = 5;
+    }
+    return population;
+  }
+
+  float closestDistance(Dudley[] dud) {
+    Vect2 linePoint1 = new Vect2(handles[0].getX(), handles[0].getY());
+    Vect2 linePoint2 = new Vect2(handles[1].getX(), handles[1].getY());
+    int n = dud.length;
+    if (n>0) {
+      Vect2[] testPoints = new Vect2[n];
+      for (int i=0; i<n; i++) {
+        testPoints[i] = new Vect2(dud[i].getX(), dud[i].getY());
+      }
+      int closestPointIndex = Space2.closestPointToLine(testPoints, linePoint1, linePoint2);
+      Vect2 closestPoint = testPoints[closestPointIndex];
+      distance = Space2.pointToLineDistance(closestPoint, linePoint1, linePoint2);
+      distance = map(distance, 0, 200, 1, 0);
+      return distance;
+    } else {
+      distance = 0;
+      return distance;
+    }
+  }
   //----------------------------------------------------------------------------
   //                       DBOX UPDATE 
   void update() {
@@ -139,10 +174,10 @@ class DBox {
 
     // display dbox id
     fill(255);
-    textSize(10);
-    float tempX = handles[0].getX();
-    float tempY = handles[0].getY();
-    text("ID "+ id + " / population: " + population + " / distance: " + distance, tempX + 10, tempY - 10);
+    textSize(70);
+    //    float tempX = handles[0].getX();
+    //    float tempY = handles[0].getY();
+    text("ID "+ id + " / population: " + population + " / distance: " + distance, 30, height-250 +80*id);
   }
 
   //---------------------------------------------------------------------------
