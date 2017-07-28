@@ -96,10 +96,9 @@ void setup() {
   // SENDING : NetAdress : ip adress and port number for sending data
   // 127.0.0.1    to loop home              (send on home reception port)
   // 192.168.X.X  for external destination  (port should be different from home reception)
-  destination = new NetAddress("192.168.2.130", 12000);
-
-
-  //-------------------------------------------------------------
+//  destination = new NetAddress("192.168.2.130", 12000);
+  destination = new NetAddress("127.0.0.1", 12000);
+ //-------------------------------------------------------------
   //                      SET UP USER INTERFACE
   // controlP5 lib for controllers : buttons, sliders, etc
   cp5 = new ControlP5(this);
@@ -147,7 +146,7 @@ void draw() {
   dbox[0].update();
   populations[0] = dbox[0].countPopulation(cam0UserPos);  
   distances[0] = dbox[0].closestDistance(cam0UserPos);
-//  distances[0] = dbox[0].mouseDistance();
+//  distances[0] = dbox[0].mouseDistance(); 
   //  populations[0] += dbox[0].countPopulation(dud); 
   //  distances[0] = max(distances[0], dbox[0].closestDistance(dud));
   dbox[0].display();
