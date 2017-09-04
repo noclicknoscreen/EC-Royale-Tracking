@@ -57,82 +57,87 @@ void setupControl() {
   makeEditable(ang0);
   ang0.getValueLabel().setText(str(int(degrees(cam[0].getAng()))));
 
+  if (ncam>1) {
+    pos1x = cp5.addNumberbox("pos1x")
+      .setSize(70, 20)
+        .setRange(0, roomWidth)
+          .setPosition(640/2+30 + 70 + 30, 40)
+            .setDirection(Controller.HORIZONTAL)
+              .setValue(int(cam[1].getX_init()))
+                ;
+    pos1y = cp5.addNumberbox("pos1y")
+      .setSize(70, 20)
+        .setRange(0, roomHeight+200)
+          .setPosition(640/2+30+ 70 +30 +70 +30, 40)
+            .setValue(int(cam[1].getY_init()))
+              ;
+    ang1 = cp5.addNumberbox("ang1")
+      .setSize(70, 20)
+        .setRange(0, 360)
+          .setPosition(640/2 + 30, 40)
+            .setDirection(Controller.HORIZONTAL)
+              .setValue(int(degrees(cam[1].getAng_init())))
+                ;
+    makeEditable(pos1x);
+    makeEditable(pos1y);
+    makeEditable(ang1);
+    ang1.getValueLabel().setText(str(int(degrees(cam[1].getAng()))));
+  }
 
-  pos1x = cp5.addNumberbox("pos1x")
-    .setSize(70, 20)
-      .setRange(0, roomWidth)
-        .setPosition(640/2+30 + 70 + 30, 40)
-          .setDirection(Controller.HORIZONTAL)
-            .setValue(int(cam[1].getX_init()))
+  if (ncam>2) {
+    pos2x = cp5.addNumberbox("pos2x")
+      .setSize(70, 20)
+        .setRange(0, roomWidth)
+          .setPosition(30 + 70 + 30, 2*40)
+            .setDirection(Controller.HORIZONTAL)
+              .setValue(int(cam[2].getX_init()))
+                ;
+    pos2y = cp5.addNumberbox("pos2y")
+      .setSize(70, 20)
+        .setRange(0, roomHeight+200)
+          .setPosition(30+ 70 +30 +70 +30, 2* 40)
+            .setValue(int(cam[2].getY_init()))
               ;
-  pos1y = cp5.addNumberbox("pos1y")
-    .setSize(70, 20)
-      .setRange(0, roomHeight+200)
-        .setPosition(640/2+30+ 70 +30 +70 +30, 40)
-          .setValue(int(cam[1].getY_init()))
-            ;
-  ang1 = cp5.addNumberbox("ang1")
-    .setSize(70, 20)
-      .setRange(0, 360)
-        .setPosition(640/2 + 30, 40)
-          .setDirection(Controller.HORIZONTAL)
-            .setValue(int(degrees(cam[1].getAng_init())))
-              ;
-  makeEditable(pos1x);
-  makeEditable(pos1y);
-  makeEditable(ang1);
-  ang1.getValueLabel().setText(str(int(degrees(cam[1].getAng()))));
-  pos2x = cp5.addNumberbox("pos2x")
-    .setSize(70, 20)
-      .setRange(0, roomWidth)
-        .setPosition(30 + 70 + 30, 2*40)
-          .setDirection(Controller.HORIZONTAL)
-            .setValue(int(cam[2].getX_init()))
-              ;
-  pos2y = cp5.addNumberbox("pos2y")
-    .setSize(70, 20)
-      .setRange(0, roomHeight+200)
-        .setPosition(30+ 70 +30 +70 +30, 2* 40)
-          .setValue(int(cam[2].getY_init()))
-            ;
-  ang2 = cp5.addNumberbox("ang2")
-    .setSize(70, 20)
-      .setRange(0, 360)
-        .setPosition(30, 2* 40)
-          .setDirection(Controller.HORIZONTAL)
-            .setValue(int(degrees(cam[2].getAng_init())))
-              ;
-  makeEditable(pos2x);
-  makeEditable(pos2y);
-  makeEditable(ang2);
-  ang2.getValueLabel().setText(str(int(degrees(cam[2].getAng()))));
+    ang2 = cp5.addNumberbox("ang2")
+      .setSize(70, 20)
+        .setRange(0, 360)
+          .setPosition(30, 2* 40)
+            .setDirection(Controller.HORIZONTAL)
+              .setValue(int(degrees(cam[2].getAng_init())))
+                ;
+    makeEditable(pos2x);
+    makeEditable(pos2y);
+    makeEditable(ang2);
+    ang2.getValueLabel().setText(str(int(degrees(cam[2].getAng()))));
+  }
 
-  pos3x = cp5.addNumberbox("pos3x")
-    .setSize(70, 20)
-      .setRange(0, roomWidth)
-        .setPosition(640/2+30 + 70 + 30, 2*40)
-          .setDirection(Controller.HORIZONTAL)
-            .setValue(int(cam[3].getX_init()))
-              ;
-  pos3y = cp5.addNumberbox("pos3y")
-    .setSize(70, 20)
-      .setRange(0, roomHeight+200)
-        .setPosition(640/2+30 + 70 + 30 +70 +30, 2*40)
-          .setValue(int(cam[3].getY_init()))
-            ;
-  ang3 = cp5.addNumberbox("ang3")
-    .setSize(70, 20)
-      .setRange(0, 360)
-        .setPosition(640/2+30, 2*40)
-          .setDirection(Controller.HORIZONTAL)
-            .setValue(int(degrees(cam[3].getAng_init())))
-              ;
-  makeEditable(pos3x);
-  makeEditable(pos3y);
-  makeEditable(ang3);
-  ang0.getValueLabel().setText(str(int(degrees(cam[0].getAng()))));
+  if (ncam>3) {
 
-
+    pos3x = cp5.addNumberbox("pos3x")
+      .setSize(70, 20)
+        .setRange(0, roomWidth)
+          .setPosition(640/2+30 + 70 + 30, 2*40)
+            .setDirection(Controller.HORIZONTAL)
+              .setValue(int(cam[3].getX_init()))
+                ;
+    pos3y = cp5.addNumberbox("pos3y")
+      .setSize(70, 20)
+        .setRange(0, roomHeight+200)
+          .setPosition(640/2+30 + 70 + 30 +70 +30, 2*40)
+            .setValue(int(cam[3].getY_init()))
+              ;
+    ang3 = cp5.addNumberbox("ang3")
+      .setSize(70, 20)
+        .setRange(0, 360)
+          .setPosition(640/2+30, 2*40)
+            .setDirection(Controller.HORIZONTAL)
+              .setValue(int(degrees(cam[3].getAng_init())))
+                ;
+    makeEditable(pos3x);
+    makeEditable(pos3y);
+    makeEditable(ang3);
+    ang3.getValueLabel().setText(str(int(degrees(cam[3].getAng()))));
+  }
 
   cp5.addButton("save")
     .setPosition(width - 60, height - 40)
@@ -150,33 +155,52 @@ void pos0y(int v) {
 void ang0(int v) {
   cam[0].setAng(radians(v));
 }
+
 void pos1x(int v) {
-  cam[1].setX(v);
+  if (ncam>1) {
+    cam[1].setX(v);
+  }
 }
 void pos1y(int v) {
-  cam[1].setY(v);
+  if (ncam>1) {
+    cam[1].setY(v);
+  }
 }
 void ang1(int v) {
-  cam[1].setAng(radians(v));
+  if (ncam>1) {
+    cam[1].setAng(radians(v));
+  }
 }
 void pos2x(int v) {
-  cam[2].setX(v);
+  if (ncam>2) {
+    cam[2].setX(v);
+  }
 }
 void pos2y(int v) {
-  cam[2].setY(v);
+  if (ncam>2) {
+    cam[2].setY(v);
+  }
 }
 void ang2(int v) {
-  cam[2].setAng(radians(v));
+  if (ncam>2) {
+    cam[2].setAng(radians(v));
+  }
 }
 
 void pos3x(int v) {
-  cam[3].setX(v);
+  if (ncam>3) {
+    cam[3].setX(v);
+  }
 }
 void pos3y(int v) {
-  cam[3].setY(v);
+  if (ncam>3) {
+    cam[3].setY(v);
+  }
 }
 void ang3(int v) {
-  cam[3].setAng(radians(v));
+  if (ncam>3) {
+    cam[3].setAng(radians(v));
+  }
 }
 
 

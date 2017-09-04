@@ -34,21 +34,25 @@ import oscP5.*;
 import netP5.*;
 import controlP5.*;
 
-Camera[] cam = new Camera[4];     // cameras
-DBox[] dbox = new DBox[4];        // detection box
-Dudley[] dud = new Dudley[4];     // Dudleys for simulation
-OscP5 oscP5;                      // open sound control : send data
-NetAddress destination;           // ip adress for osc communication
-ControlP5 cp5;                    // UI Control
-ArrayList<PVector> cam0UserPos, cam1UserPos, cam2UserPos, cam3UserPos;
-int[] populations = new int[4];
-float[] distances = new float[4];
-
+final static int ncam = 4;                // number of kinect cameras
 final static float fieldOfView = 0.84823; // kinect v1 field of view angle in radians
 final static int roomWidth = 800;         // room  width and height 
 final static int roomHeight = 600;        // TODO : custom coor sys to have real dimensions    
 final static int viewWidth = 640/2;       // view width scaling for rendering on screen
-final static int viewHeight = 480/2;      
+final static int viewHeight = 480/2;     
+
+Camera[] cam = new Camera[ncam];     // cameras
+DBox[] dbox = new DBox[ncam];        // detection box
+Dudley[] dud = new Dudley[ncam];     // Dudleys for simulation
+OscP5 oscP5;                         // open sound control : send data
+NetAddress destination;              // ip adress for osc communication
+ControlP5 cp5;                       // UI Control
+int[] populations = new int[ncam];   // population for each detection zone
+float[] distances = new float[ncam]; // population for each detection zone 
+
+// array list of users positions for each camera
+ArrayList<ArrayList<PVector>> camUserPos = new ArrayList<ArrayList<PVector>>();     
+
 JSONObject data;                          // data stored from previous session
 
 void setup() {
@@ -70,22 +74,14 @@ void setup() {
   SimpleOpenNI.deviceNames(strList);
   println(strList.size() + " kinect detected");
 
-
-  // Camera objects store metadata on cameras, like position, etc
-  cam[0] = new Camera(0);
-  cam[1] = new Camera(1);
-  cam[2] = new Camera(2);
-  cam[3] = new Camera(3);
-
-  //-------------------------------------------------------------
-  //                     SETUP DETECTION BOX
-  dbox[0] = new DBox(0, 20);
-  dbox[1] = new DBox(1, 20);
-  dbox[2] = new DBox(2, 20);
-  dbox[3] = new DBox(3, 20);
+  // Init Camera and DBox objects
+  for (int i=0; i<ncam; i++) {
+    cam[i] = new Camera(i);
+    dbox[i] = new DBox(i, 20);
+  }
 
   //-------------------------------------------------------------
-  //                     SET UP DUDLEYS
+  //               SET UP DUDLEYS FOR PEOPLE SIMULATION
   //  dud[0] = new Dudley(0, 300, 500, 100, 0.005);
   //  dud[1] = new Dudley(1, 300, 300, 40, 0.008);
   //  dud[2] = new Dudley(2, 300, 400, 70, 0.010);
@@ -93,12 +89,12 @@ void setup() {
 
   //-------------------------------------------------------------
   //                      SETUP OSC COMMUNICATION
-  // RECEIVING : Start oscP5, listening for incoming messages at port 12000
+  // RECEIVING : Start oscP5, listening for incoming messages at port 12001
   oscP5 = new OscP5(this, 12001);
   // SENDING : NetAdress : ip adress and port number for sending data
-  // 127.0.0.1    to loop home              (send on home reception port)
+  // 127.0.0.1    to loop home              (send on home reception port for testing purposes)
   // 192.168.X.X  for external destination  (port should be different from home reception)
-  //  destination = new NetAddress("192.168.2.130", 12000);
+  // destination = new NetAddress("192.168.2.130", 12000);
   destination = new NetAddress("127.0.0.1", 12000);
   //-------------------------------------------------------------
   //                      SET UP USER INTERFACE
@@ -115,17 +111,13 @@ void draw() {
   // update all cams
   SimpleOpenNI.updateAll();
 
-
   //-------------------------------------------------------------
   //                      DISPLAY DASHBOARD
 
-
   // display all cams depth view
-  cam[0].displayView(width-viewWidth, 0);
-  cam[1].displayView(width-viewWidth, viewHeight);
-  cam[2].displayView(width-viewWidth, 2*viewHeight);
-  cam[3].displayView(width-viewWidth, 3*viewHeight);
-
+  for (int i=0; i<ncam; i++) {
+    cam[i].displayView(width-viewWidth, i*viewHeight);
+  }
 
   // shift to virtual room area
   pushMatrix();
@@ -134,10 +126,9 @@ void draw() {
   noStroke();
   rect(20, 0, roomWidth, roomHeight);
   // get position on plan and render it
-  cam0UserPos = cam[0].renderUserPos();
-  cam1UserPos = cam[1].renderUserPos();
-  cam2UserPos = cam[2].renderUserPos();
-  cam3UserPos = cam[3].renderUserPos();
+  for (int i=0; i<ncam; i++) {
+    camUserPos.add(cam[i].renderUserPos());
+  }
   popMatrix();
 
   // Display framerate (style in Toolbox)
@@ -147,34 +138,15 @@ void draw() {
   //-------------------------------------------------------------
   //                       DBOX RENDERING
 
-  dbox[0].update();
-  populations[0] = dbox[0].countPopulation(cam0UserPos);  
-  distances[0] = dbox[0].closestDistance(cam0UserPos);
-  //  distances[0] = dbox[0].mouseDistance(); 
-  //  populations[0] += dbox[0].countPopulation(dud); 
-  //  distances[0] = max(distances[0], dbox[0].closestDistance(dud));
-  dbox[0].display();
-  dbox[1].update();
-  populations[1] = dbox[1].countPopulation(cam1UserPos);
-  distances[1] = dbox[1].closestDistance(cam1UserPos);
-  //  distances[0] = dbox[1].mouseDistance();
-  //  populations[1] += dbox[1].countPopulation(dud); 
-  //  distances[1] = max(distances[1], dbox[1].closestDistance(dud));
-  dbox[1].display();
-  dbox[2].update();
-  populations[2] = dbox[2].countPopulation(cam2UserPos);
-  distances[2] = dbox[2].closestDistance(cam2UserPos);
-  //  distances[2] = dbox[1].mouseDistance();
-
-  //  populations[2] += dbox[2].countPopulation(dud); 
-  //  distances[2] = max(distances[2], dbox[2].closestDistance(dud));
-  dbox[2].display();
-
-  dbox[3].update();
-  populations[3] = dbox[3].countPopulation(cam3UserPos);
-  distances[3] = dbox[3].closestDistance(cam3UserPos);
-  dbox[3].display();
-
+  for (int i=0; i<ncam; i++) {
+    dbox[i].update();
+    populations[i] = dbox[i].countPopulation(camUserPos.get(i));  
+    distances[i] = dbox[i].closestDistance(camUserPos.get(i));
+    //  distances[i] = dbox[i].mouseDistance();                      // mouse Simulation
+    //  populations[i] += dbox[i].countPopulation(dud); 
+    //  distances[i] = max(distances[i], dbox[i].closestDistance(dud));
+    dbox[i].display();
+  }
 
   //-------------------------------------------------------------
   //                      DUDLEY RENDERING
@@ -184,17 +156,25 @@ void draw() {
 
   //-------------------------------------------------------------
   //                         OUTPUT OSC
-  sendOSC("/North/population", populations[1]);
-  sendOSC("/North/distance", distances[1]);
+
   sendOSC("/West/population", populations[0]);
   sendOSC("/West/distance", distances[0]);
-  sendOSC("/South/population", populations[2]);
-  sendOSC("/South/distance", distances[2]);
-  sendOSC("/East/population", populations[3]);
-  sendOSC("/East/distance", distances[3]);
+  if (ncam>1) {
+    sendOSC("/North/population", populations[1]);
+    sendOSC("/North/distance", distances[1]);
+  }
+  if (ncam>2) {
+    sendOSC("/South/population", populations[2]);
+    sendOSC("/South/distance", distances[2]);
+  }
+  if (ncam>3) {
+    sendOSC("/East/population", populations[3]);
+    sendOSC("/East/distance", distances[3]);
+  }
   //  println("OSC sent at frame " + frameCount);
 }
 
+// send OSC for float and int type of value
 void sendOSC(String title, float value) {
   OscMessage msg = new OscMessage(title);
   msg.add(value);
@@ -205,8 +185,10 @@ void sendOSC(String title, int value) {
   msg.add(value);
   oscP5.send(msg, destination);
 }
+
+
 //-------------------------------------------------------------
-//                  RECEIVING CLIENT : listen to osc 
+//                  RECEIVING CLIENT : listen to osc  (testing purpose)
 void oscEvent(OscMessage msg) {
   print("### OSC message at ");
   print(millis() + " ms");

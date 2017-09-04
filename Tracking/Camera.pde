@@ -26,7 +26,7 @@ class Camera {
     camang_init = data.getFloat("cam" + id + "ang");
 
     //    // kinect initialization
-    kin = new SimpleOpenNI(id, Tracking4Cam.this);
+    kin = new SimpleOpenNI(id, Tracking.this);
     this.id = id;
 
     // initialization callback
