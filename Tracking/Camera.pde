@@ -21,9 +21,10 @@ class Camera {
   //                        CONSTRUCTOR
   Camera(int id) {
     // read data from previous session
-    camX_init =   data.getFloat("cam" + id + "X");  
-    camY_init =   data.getFloat("cam" + id + "Y");
-    camang_init = data.getFloat("cam" + id + "ang");
+    camX_init =   data.getJSONArray("cam").getJSONObject(id).getFloat("x");  
+    println("camX_init " + camX_init);
+    camY_init =   data.getJSONArray("cam").getJSONObject(id).getFloat("y");
+    camang_init = data.getJSONArray("cam").getJSONObject(id).getFloat("ang");
 
     //    // kinect initialization
     kin = new SimpleOpenNI(id, Tracking.this);

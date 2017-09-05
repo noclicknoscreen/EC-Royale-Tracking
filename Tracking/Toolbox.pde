@@ -12,7 +12,7 @@ void displayFramerate() {
   pushMatrix();
   fill(#FFFFFF);
   textSize(14);
-  text(int(frameRate) + " fps", 10, 20);
+  text(int(frameRate) + " fps", 180, 26);
   popMatrix();
 }
 
@@ -140,8 +140,8 @@ void setupControl() {
   }
 
   cp5.addButton("save")
-    .setPosition(width - 60, height - 40)
-      .setSize(50, 20)
+    .setPosition(30, 10)
+      .setSize(140, 20)
         ;
 }
 
@@ -207,38 +207,33 @@ void ang3(int v) {
 
 
 void save(int v) {
-  data.setFloat("cam0X", cam[0].getX());
-  data.setFloat("cam0Y", cam[0].getY());
-  data.setFloat("cam0ang", cam[0].getAng());
-  data.setFloat("cam1X", cam[1].getX());
-  data.setFloat("cam1Y", cam[1].getY());
-  data.setFloat("cam1ang", cam[1].getAng());
-  data.setFloat("cam2X", cam[2].getX());
-  data.setFloat("cam2Y", cam[2].getY());
-  data.setFloat("cam2ang", cam[2].getAng());
-  data.setFloat("cam3X", cam[3].getX());
-  data.setFloat("cam3Y", cam[3].getY());
-  data.setFloat("cam3ang", cam[3].getAng());
+  for (int i=0; i<ncam; i++) {
+    data.getJSONArray("cam")
+      .getJSONObject(i)
+        .setFloat("x", cam[i].getX());
+    data.getJSONArray("cam")
+      .getJSONObject(i)
+        .setFloat("y", cam[i].getY());
+    data.getJSONArray("cam")
+      .getJSONObject(i)
+        .setFloat("ang", cam[i].getAng());
+  }
   for (int id = 0; id < dbox.length; id ++) {
     for (int ihandle = 0; ihandle < 4; ihandle++) {
-      saveDBoxHandle(id, ihandle);
+      data.getJSONArray("dbox")
+        .getJSONObject(id)
+          .getJSONArray("handlesCoor")
+            .getJSONObject(ihandle)
+              .setFloat("x", dbox[id].getHandles()[ihandle].getX());
+      data.getJSONArray("dbox")
+        .getJSONObject(id)
+          .getJSONArray("handlesCoor")
+            .getJSONObject(ihandle)
+              .setFloat("y", dbox[id].getHandles()[ihandle].getY());
     }
   }
-
   saveJSONObject(data, "data/roomProfile.json");
-}
-
-void saveDBoxHandle(int id, int ihandle) {
-  data.getJSONArray("dbox")
-    .getJSONObject(id)
-      .getJSONArray("handlesCoor")
-        .getJSONObject(ihandle)
-          .setFloat("x", dbox[id].getHandles()[ihandle].getX());
-  data.getJSONArray("dbox")
-    .getJSONObject(id)
-      .getJSONArray("handlesCoor")
-        .getJSONObject(ihandle)
-          .setFloat("y", dbox[id].getHandles()[ihandle].getY());
+  println("Camera object X coor: " + cam[0].getX());
 }
 
 // function that will be called when controller 'numbers' changes

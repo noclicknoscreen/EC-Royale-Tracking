@@ -34,7 +34,7 @@ import oscP5.*;
 import netP5.*;
 import controlP5.*;
 
-final static int ncam = 4;                // number of kinect cameras
+final static int ncam = 2;                // number of kinect cameras
 final static float fieldOfView = 0.84823; // kinect v1 field of view angle in radians
 final static int roomWidth = 800;         // room  width and height 
 final static int roomHeight = 600;        // TODO : custom coor sys to have real dimensions    
