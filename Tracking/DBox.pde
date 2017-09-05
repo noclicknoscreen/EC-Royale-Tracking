@@ -23,12 +23,15 @@ class DBox {
   //                      DBOX CONSTRUCTOR
   DBox(int id, float dsize) {
     this.id = id;
-
     // read data from previous session
-    handles[0] = new Handle(getDBoxDataCoor(id, 0).x, getDBoxDataCoor(id, 0).y, 0, 0, hsize, handles);
-    handles[1] = new Handle(getDBoxDataCoor(id, 1).x, getDBoxDataCoor(id, 1).y, 0, 0, hsize, handles);
-    handles[2] = new Handle(getDBoxDataCoor(id, 2).x, getDBoxDataCoor(id, 2).y, 0, 0, hsize, handles);
-    handles[3] = new Handle(getDBoxDataCoor(id, 3).x, getDBoxDataCoor(id, 3).y, 0, 0, hsize, handles);
+    handles[0] = new Handle(getDBoxDataCoor(id, 0).x, getDBoxDataCoor(id, 0).y, 0, 0, hsize, allHandles);
+    handles[1] = new Handle(getDBoxDataCoor(id, 1).x, getDBoxDataCoor(id, 1).y, 0, 0, hsize, allHandles);
+    handles[2] = new Handle(getDBoxDataCoor(id, 2).x, getDBoxDataCoor(id, 2).y, 0, 0, hsize, allHandles);
+    handles[3] = new Handle(getDBoxDataCoor(id, 3).x, getDBoxDataCoor(id, 3).y, 0, 0, hsize, allHandles);
+    
+    for(int i=0; i<4; i++) {
+      allHandles[id*4+i] = handles[i];
+    } 
 
     // define vertices for polygon detection
     for (int i = 0; i < handles.length; i++) {

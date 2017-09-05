@@ -22,7 +22,6 @@ class Camera {
   Camera(int id) {
     // read data from previous session
     camX_init =   data.getJSONArray("cam").getJSONObject(id).getFloat("x");  
-    println("camX_init " + camX_init);
     camY_init =   data.getJSONArray("cam").getJSONObject(id).getFloat("y");
     camang_init = data.getJSONArray("cam").getJSONObject(id).getFloat("ang");
 
