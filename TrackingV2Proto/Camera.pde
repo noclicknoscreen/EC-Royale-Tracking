@@ -3,7 +3,6 @@ class Camera {
   int id;                                  // kinect custom id :  0, 1, 2 or 3
   float camX_init, camY_init, camang_init; // var from previous session
   float camX, camY, camang;                // real-time variables for cam coor     
-  PImage view;                             // view for rendering depth map on screen
   PVector com = new PVector();             // var to store center of mass, reused for each user
   ArrayList<PVector> comUsers; 
 
@@ -21,12 +20,12 @@ class Camera {
   //                        CONSTRUCTOR
   Camera(int id) {
     // read data from previous session
-    camX_init =   data.getFloat("cam" + id + "X");  
-    camY_init =   data.getFloat("cam" + id + "Y");
+    camX_init =   data.getFloat("cam" + id + "x");  
+    camY_init =   data.getFloat("cam" + id + "y");
     camang_init = data.getFloat("cam" + id + "ang");
 
     //    // kinect initialization
-    kin = new SimpleOpenNI(id, TrackingV2Proto.this);
+    kin = new SimpleOpenNI(id, TrackingV2Proto.this, SimpleOpenNI.RUN_MODE_MULTI_THREADED);
     this.id = id;
 
     // initialization callback
@@ -35,20 +34,31 @@ class Camera {
       exit();
       return;
     } else {
-      println("Kinect " + id + " : init OK");
+      println("Kinect " + id + " : init OK (Electrical plugged ?)");
     }
 
     // set the camera generators 
     kin.enableDepth();
+    //kin.enableRGB();
     kin.enableUser();
   }
 
   //-----------------------------------------------------------------------
   //                        DISPLAY VIEW 
-  void displayView(float x_, float y_) {
+  void displayDepth(float x_, float y_) {
+    PImage view;                             // view for rendering depth map on screen
+    // depth
     view = kin.userImage().get();   // get a copy of the depth image
     view.resize(viewWidth, viewHeight);          // resize it
     image(view, x_, y_);
+  }
+
+  void displayRGB(float x_, float y_) {
+    PImage rgb;                             // view for rendering depth map on screen
+    // depth
+    rgb = kin.rgbImage().get();   // get a copy of the depth image
+    rgb.resize(viewWidth, viewHeight);          // resize it
+    image(rgb, x_, y_);
   }
 
 
@@ -83,13 +93,19 @@ class Camera {
       if (kin.getCoM(userList1[i], com) && com.z != 0) {
         pushMatrix();
         //stroke(userClr[i % userClr.length] 
-        stroke(255);
-        strokeWeight(20);
         float Zplan = map(com.z, 0, 8000, 0, Htemp);
         float Xplan = map(com.x, 3000, -3000, 0, Htemp*sin(fieldOfView));
         PVector potentialUser =new PVector(screenX(Zplan, Xplan-180), screenY(Zplan, Xplan-180));
         if (dbox[id].isInside(potentialUser)) {
           comUsers.add(potentialUser);
+          // Draw White
+          stroke(255);
+          strokeWeight(20);
+          point(Zplan, Xplan - 180);
+        }else{
+          // Draw Gray
+          stroke(150);
+          strokeWeight(20);
           point(Zplan, Xplan - 180);
         }
         popMatrix();

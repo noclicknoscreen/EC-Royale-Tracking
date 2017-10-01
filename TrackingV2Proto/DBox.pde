@@ -174,10 +174,13 @@ class DBox {
 
     // display dbox id
     fill(255);
-    textSize(70);
+    textSize(15);
+    float xText, yText;
+    xText = 0.25 * (handles[0].getX() + handles[1].getX() + handles[2].getX() + handles[3].getX());
+    yText = 0.25 * (handles[0].getY() + handles[1].getY() + handles[2].getY() + handles[3].getY());
     //    float tempX = handles[0].getX();
     //    float tempY = handles[0].getY();
-    text("ID "+ id + " / population: " + population + " / distance: " + distance, 30, height-250 +80*id);
+    text("ID "+ id + "\npopulation: " + population + "\ndistance: " + distance, xText + 25, yText + 25);
   }
 
   //---------------------------------------------------------------------------

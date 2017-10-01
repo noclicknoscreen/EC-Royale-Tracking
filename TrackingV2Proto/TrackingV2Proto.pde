@@ -34,15 +34,18 @@ import oscP5.*;
 import netP5.*;
 import controlP5.*;
 
-Camera[] cam = new Camera[3];     // cameras
-DBox[] dbox = new DBox[3];        // detection box
-Dudley[] dud = new Dudley[3];     // Dudleys for simulation
+Camera[] cam = new Camera[4];     // cameras
+DBox[] dbox = new DBox[4];        // detection box
+Dudley[] dud = new Dudley[4];     // Dudleys for simulation
+
 OscP5 oscP5;                      // open sound control : send data
 NetAddress destination;           // ip adress for osc communication
 ControlP5 cp5;                    // UI Control
-ArrayList<PVector> cam0UserPos, cam1UserPos, cam2UserPos;
+ArrayList<PVector> cam0UserPos, cam1UserPos, cam2UserPos, cam3UserPos;
 int[] populations = new int[4];
 float[] distances = new float[4];
+
+boolean displayRGB = true;
 
 final static float fieldOfView = 0.84823; // kinect v1 field of view angle in radians
 final static int roomWidth = 800;         // room  width and height 
@@ -53,7 +56,8 @@ JSONObject data;                          // data stored from previous session
 
 void setup() {
   size(1500, 1000);
-  frameRate(30);
+  frameRate(20);
+  background(0, 0, 0);
 
   //-------------------------------------------------------------
   //                   SETUP DATABASE
@@ -75,12 +79,14 @@ void setup() {
   cam[0] = new Camera(0);
   cam[1] = new Camera(1);
   cam[2] = new Camera(2);
+  cam[3] = new Camera(3);
 
   //-------------------------------------------------------------
   //                     SETUP DETECTION BOX
   dbox[0] = new DBox(0, 20);
   dbox[1] = new DBox(1, 20);
   dbox[2] = new DBox(2, 20);
+  dbox[3] = new DBox(3, 20);
 
   //-------------------------------------------------------------
   //                     SET UP DUDLEYS
@@ -91,39 +97,54 @@ void setup() {
 
   //-------------------------------------------------------------
   //                      SETUP OSC COMMUNICATION
+  println("Setup OSC");
   // RECEIVING : Start oscP5, listening for incoming messages at port 12000
   oscP5 = new OscP5(this, 12001);
   // SENDING : NetAdress : ip adress and port number for sending data
-  // 127.0.0.1    to loop home              (send on home reception port)
+  // 127.0.0.1    to loop home              (send on //home reception port)
   // 192.168.X.X  for external destination  (port should be different from home reception)
-//  destination = new NetAddress("192.168.2.130", 12000);
+  //  destination = new NetAddress("192.168.2.130", 12000);
   destination = new NetAddress("127.0.0.1", 12000);
- //-------------------------------------------------------------
+
+  //-------------------------------------------------------------
   //                      SET UP USER INTERFACE
   // controlP5 lib for controllers : buttons, sliders, etc
+  println("Setup UI");
   cp5 = new ControlP5(this);
   setupControl();
 }
 
 void draw() { 
+
   background(140, 140, 140);
 
   //-------------------------------------------------------------
   //                        UPDATE CAMERAS
   // update all cams
+  //if(frameCount % 2 == 0){
   SimpleOpenNI.updateAll();
-
+  //}
 
   //-------------------------------------------------------------
   //                      DISPLAY DASHBOARD
-
-
+  if (displayRGB == true) {
   // display all cams depth view
-  cam[0].displayView(width-viewWidth, 0);
-  cam[1].displayView(width-viewWidth, viewHeight);
-  cam[2].displayView(width-viewWidth, 2*viewHeight);
-
-
+  cam[0].displayDepth(width-viewWidth, 0);
+  cam[1].displayDepth(width-viewWidth, viewHeight);
+  cam[2].displayDepth(width-viewWidth, 2*viewHeight);
+  cam[3].displayDepth(width-viewWidth, 3*viewHeight);
+  }
+  // display all cams RGB
+  /*
+  if (displayRGB == true) {
+    cam[0].displayRGB(width-2*viewWidth, 0);
+    cam[1].displayRGB(width-2*viewWidth, viewHeight);
+    cam[2].displayRGB(width-2*viewWidth, 2*viewHeight);
+    cam[3].displayRGB(width-2*viewWidth, 3*viewHeight);
+  }else{
+    //
+  }
+  */
   // shift to virtual room area
   pushMatrix();
   translate(0, 200);
@@ -134,38 +155,52 @@ void draw() {
   cam0UserPos = cam[0].renderUserPos();
   cam1UserPos = cam[1].renderUserPos();
   cam2UserPos = cam[2].renderUserPos();
+  cam3UserPos = cam[3].renderUserPos();
   popMatrix();
 
   // Display framerate (style in Toolbox)
   displayFramerate();
 
-
   //-------------------------------------------------------------
   //                       DBOX RENDERING
-
+  // dbox 0 -------------------------------------------------------------
   dbox[0].update();
   populations[0] = dbox[0].countPopulation(cam0UserPos);  
   distances[0] = dbox[0].closestDistance(cam0UserPos);
-//  distances[0] = dbox[0].mouseDistance(); 
+  //  distances[0] = dbox[0].mouseDistance(); 
   //  populations[0] += dbox[0].countPopulation(dud); 
   //  distances[0] = max(distances[0], dbox[0].closestDistance(dud));
   dbox[0].display();
+
+  // dbox 1 -------------------------------------------------------------
   dbox[1].update();
   populations[1] = dbox[1].countPopulation(cam1UserPos);
   distances[1] = dbox[1].closestDistance(cam1UserPos);
-//  distances[0] = dbox[1].mouseDistance();
+  //  distances[0] = dbox[1].mouseDistance();
   //  populations[1] += dbox[1].countPopulation(dud); 
   //  distances[1] = max(distances[1], dbox[1].closestDistance(dud));
   dbox[1].display();
+
+  // dbox 2 -------------------------------------------------------------
   dbox[2].update();
   populations[2] = dbox[2].countPopulation(cam2UserPos);
   distances[2] = dbox[2].closestDistance(cam2UserPos);
-//  distances[2] = dbox[1].mouseDistance();
+  //  distances[2] = dbox[1].mouseDistance();
 
   //  populations[2] += dbox[2].countPopulation(dud); 
   //  distances[2] = max(distances[2], dbox[2].closestDistance(dud));
   dbox[2].display();
 
+
+  // dbox 3 -------------------------------------------------------------
+  dbox[3].update();
+  populations[3] = dbox[3].countPopulation(cam3UserPos);
+  distances[3] = dbox[3].closestDistance(cam3UserPos);
+  //  distances[2] = dbox[1].mouseDistance();
+
+  //  populations[2] += dbox[2].countPopulation(dud); 
+  //  distances[2] = max(distances[2], dbox[2].closestDistance(dud));
+  dbox[3].display();
 
   //-------------------------------------------------------------
   //                      DUDLEY RENDERING
@@ -175,13 +210,19 @@ void draw() {
 
   //-------------------------------------------------------------
   //                         OUTPUT OSC
-  sendOSC("/North/population", populations[1]);
-  sendOSC("/North/distance", distances[1]);
-  sendOSC("/West/population", populations[0]);
-  sendOSC("/West/distance", distances[0]);
+  sendOSC("/North/population", populations[0]);
+  sendOSC("/North/distance", distances[0]);
+  
+  sendOSC("/West/population", populations[1]);
+  sendOSC("/West/distance", distances[1]);
+  
   sendOSC("/South/population", populations[2]);
   sendOSC("/South/distance", distances[2]);
-//  println("OSC sent at frame " + frameCount);
+  
+  sendOSC("/East/population", populations[3]);
+  sendOSC("/East/distance", distances[3]);
+
+  //  println("OSC sent at frame " + frameCount);
 }
 
 void sendOSC(String title, float value) {

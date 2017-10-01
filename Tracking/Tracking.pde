@@ -35,7 +35,6 @@ import netP5.*;
 import controlP5.*;
 
 final static int ncam = 2;                // number of kinect cameras
-final static int nhandles = ncam * 4;     // number of handles
 final static float fieldOfView = 0.84823; // kinect v1 field of view angle in radians
 final static int roomWidth = 800;         // room  width and height 
 final static int roomHeight = 600;        // TODO : custom coor sys to have real dimensions    
@@ -50,9 +49,6 @@ NetAddress destination;              // ip adress for osc communication
 ControlP5 cp5;                       // UI Control
 int[] populations = new int[ncam];   // population for each detection zone
 float[] distances = new float[ncam]; // population for each detection zone 
-
-Handle[] allHandles = new Handle[nhandles];   // handles declaration
-
 
 // array list of users positions for each camera
 ArrayList<ArrayList<PVector>> camUserPos = new ArrayList<ArrayList<PVector>>();     

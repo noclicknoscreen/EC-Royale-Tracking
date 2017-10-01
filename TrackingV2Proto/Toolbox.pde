@@ -11,8 +11,8 @@
 void displayFramerate() {
   pushMatrix();
   fill(#FFFFFF);
-  textSize(14);
-  text(int(frameRate) + " fps", 10, 20);
+  textSize(20);
+  text(int(frameRate) + " fps", 200, 10);
   popMatrix();
 }
 
@@ -26,6 +26,9 @@ Numberbox pos1y;
 Numberbox ang2;
 Numberbox pos2x;
 Numberbox pos2y;
+Numberbox ang3;
+Numberbox pos3x;
+Numberbox pos3y;
 
 
 void setupControl() {
@@ -79,6 +82,8 @@ void setupControl() {
   makeEditable(pos1y);
   makeEditable(ang1);
   ang1.getValueLabel().setText(str(int(degrees(cam[1].getAng()))));
+
+
   pos2x = cp5.addNumberbox("pos2x")
     .setSize(70, 20)
       .setRange(0, roomWidth)
@@ -105,8 +110,38 @@ void setupControl() {
   ang2.getValueLabel().setText(str(int(degrees(cam[2].getAng()))));
 
 
+  pos3x = cp5.addNumberbox("pos3x")
+    .setSize(70, 20)
+      .setRange(0, roomWidth)
+        .setPosition(640/2+30 + 70 + 30, 2*40)
+          .setDirection(Controller.HORIZONTAL)
+            .setValue(int(cam[3].getX_init()))
+              ;
+  pos3y = cp5.addNumberbox("pos3y")
+    .setSize(70, 20)
+      .setRange(0, roomHeight+200)
+        .setPosition(640/2+30+ 70 +30 +70 +30, 2* 40)
+          .setValue(int(cam[3].getY_init()))
+            ;
+  ang3 = cp5.addNumberbox("ang3")
+    .setSize(70, 20)
+      .setRange(0, 360)
+        .setPosition(640/2+30, 2* 40)
+          .setDirection(Controller.HORIZONTAL)
+            .setValue(int(degrees(cam[3].getAng_init())))
+              ;
+  makeEditable(pos3x);
+  makeEditable(pos3y);
+  makeEditable(ang3);
+  ang3.getValueLabel().setText(str(int(degrees(cam[3].getAng()))));
+
   cp5.addButton("save")
-    .setPosition(width - 60, height - 40)
+    .setPosition(10, 10)
+      .setSize(50, 20)
+        ;
+
+  cp5.addButton("RGB")
+    .setPosition(100, 10)
       .setSize(50, 20)
         ;
 }
@@ -139,19 +174,37 @@ void pos2y(int v) {
 void ang2(int v) {
   cam[2].setAng(radians(v));
 }
+void pos3x(int v) {
+  cam[3].setX(v);
+}
+void pos3y(int v) {
+  cam[3].setY(v);
+}
+void ang3(int v) {
+  cam[3].setAng(radians(v));
+}
 
-
+void RGB(int v) {
+  if (displayRGB == true) {
+    displayRGB = false;
+  }else{
+    displayRGB = true;
+  }
+}
 
 void save(int v) {
-  data.setFloat("cam0X", cam[0].getX());
-  data.setFloat("cam0Y", cam[0].getY());
+  data.setFloat("cam0x", cam[0].getX());
+  data.setFloat("cam0y", cam[0].getY());
   data.setFloat("cam0ang", cam[0].getAng());
-  data.setFloat("cam1X", cam[1].getX());
-  data.setFloat("cam1Y", cam[1].getY());
+  data.setFloat("cam1x", cam[1].getX());
+  data.setFloat("cam1y", cam[1].getY());
   data.setFloat("cam1ang", cam[1].getAng());
-  data.setFloat("cam2X", cam[2].getX());
-  data.setFloat("cam2Y", cam[2].getY());
+  data.setFloat("cam2x", cam[2].getX());
+  data.setFloat("cam2y", cam[2].getY());
   data.setFloat("cam2ang", cam[2].getAng());
+  data.setFloat("cam3x", cam[3].getX());
+  data.setFloat("cam3y", cam[3].getY());
+  data.setFloat("cam3ang", cam[3].getAng());
   for (int id = 0; id < dbox.length; id ++) {
     for (int ihandle = 0; ihandle < 4; ihandle++) {
       saveDBoxHandle(id, ihandle);

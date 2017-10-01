@@ -224,15 +224,16 @@ void save(int v) {
         .getJSONObject(id)
           .getJSONArray("handlesCoor")
             .getJSONObject(ihandle)
-              .setFloat("x", allHandles[id*4 + ihandle].getX());
+              .setFloat("x", dbox[id].getHandles()[ihandle].getX());
       data.getJSONArray("dbox")
         .getJSONObject(id)
           .getJSONArray("handlesCoor")
             .getJSONObject(ihandle)
-              .setFloat("y", allHandles[id*4 + ihandle].getY());
+              .setFloat("y", dbox[id].getHandles()[ihandle].getY());
     }
   }
   saveJSONObject(data, "data/roomProfile.json");
+  println("Camera object X coor: " + cam[0].getX());
 }
 
 // function that will be called when controller 'numbers' changes
