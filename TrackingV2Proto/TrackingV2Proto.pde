@@ -99,12 +99,12 @@ void setup() {
   //                      SETUP OSC COMMUNICATION
   println("Setup OSC");
   // RECEIVING : Start oscP5, listening for incoming messages at port 12000
-  oscP5 = new OscP5(this, 12001);
+  oscP5 = new OscP5(this, 10001);
   // SENDING : NetAdress : ip adress and port number for sending data
   // 127.0.0.1    to loop home              (send on //home reception port)
   // 192.168.X.X  for external destination  (port should be different from home reception)
   //  destination = new NetAddress("192.168.2.130", 12000);
-  destination = new NetAddress("127.0.0.1", 12000);
+  destination = new NetAddress("127.0.0.1", 10000);
 
   //-------------------------------------------------------------
   //                      SET UP USER INTERFACE
@@ -210,17 +210,17 @@ void draw() {
 
   //-------------------------------------------------------------
   //                         OUTPUT OSC
-  sendOSC("/North/population", populations[0]);
-  sendOSC("/North/distance", distances[0]);
+  sendOSC("/kin00/population", populations[0]);
+  sendOSC("/kin00/distance", distances[0]);
   
-  sendOSC("/West/population", populations[1]);
-  sendOSC("/West/distance", distances[1]);
+  sendOSC("/kin01/population", populations[1]);
+  sendOSC("/kin01/distance", distances[1]);
   
-  sendOSC("/South/population", populations[2]);
-  sendOSC("/South/distance", distances[2]);
+  sendOSC("/kin02/population", populations[2]);
+  sendOSC("/kin02/distance", distances[2]);
   
-  sendOSC("/East/population", populations[3]);
-  sendOSC("/East/distance", distances[3]);
+  sendOSC("/kin03/population", populations[3]);
+  sendOSC("/kin03/distance", distances[3]);
 
   //  println("OSC sent at frame " + frameCount);
 }
